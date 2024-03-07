@@ -1,5 +1,5 @@
+import os
 import json
-
 
 def read_product_names(file_path):
     with open(file_path, "r") as file:
@@ -8,21 +8,19 @@ def read_product_names(file_path):
 
 
 def save_data_to_js_file(data):
-    with open("outputs/data.js", "w") as file:
-        file.write("const data = [\n")
-        for product_name, sites_data in data.items():
-            file.write("  {\n")
-            file.write(f"    '{product_name}': [\n")
-            for site_name, products_data in sites_data.items():
-                file.write("      {\n")
-                for key, value in products_data.items():
-                    if isinstance(value, list):
-                        file.write(f"        {key}: {json.dumps(value)},\n")
-                    elif isinstance(value, dict):
-                        file.write(f"        {key}: {json.dumps(value, indent=2)},\n")
-                    else:
-                        file.write(f"        {key}: '{value}',\n")
-                file.write("      },\n")
-            file.write("    ],\n")
-            file.write("  },\n")
-        file.write("];\n")
+    with open("outputs/result.js", "w") as file:
+        file.write(f"const data = {json.dumps(data, indent=2)};")
+
+
+def save_data_to_html_file(product_name, site_name, data):
+    folder = f"data/HTML/{product_name}"
+    if not os.path.exists(folder):
+        os.makedirs(folder)
+        
+    site_folder = f"{folder}/{site_name}"
+    if not os.path.exists(site_folder):
+        os.makedirs(site_folder)
+        
+    file_name = f"{site_folder}/link{len(os.listdir(site_folder))+1}.html"
+    with open(file_name, "w", encoding="utf-8") as file:
+        file.write(data)

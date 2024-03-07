@@ -4,6 +4,10 @@ products:
   multiple: true
   type: Text
   children:
+    brand:
+      css: "span.a-size-base-plus.a-color-base"
+      xpath: null
+      type: Text
     title:
       css: "h2 a.a-link-normal.a-text-normal"
       xpath: null
@@ -12,4 +16,4 @@ products:
       css: "h2 a.a-link-normal.a-text-normal"
       xpath: null
       type: Link
-      format: URLFormatter
+      format: AmazonUrlFormatter

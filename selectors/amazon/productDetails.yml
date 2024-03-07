@@ -1,0 +1,27 @@
+name:
+    css: '#productTitle'
+    xpath: null
+    type: Text
+price:
+    css: 'span.a-offscreen'
+    xpath: null
+    type: Text
+    format: PriceFormatter
+rating:
+    css: 'span.a-size-base span.a-color-base'
+    xpath: null
+    type: Text
+    format: RatingFormatter
+number_of_reviews:
+    css: 'span#acrCustomerReviewText'
+    xpath: null
+    type: Text
+    format: ReviewCountFormatter
+seller:
+    css: 'a#sellerProfileTriggerId'
+    xpath: null
+    type: Text
+images:
+    css: '.imgTagWrapper img'
+    type: Attribute
+    attribute: src

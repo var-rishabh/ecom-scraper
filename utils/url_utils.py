@@ -1,36 +1,52 @@
+import json
 import requests
-
-def generate_search_urls(product_names):
-    amazon_urls = [
-        f'https://www.amazon.ae/s?k={"+".join(product_name.split())}'
-        for product_name in product_names
-    ]
-
-    return amazon_urls
+from selectorlib import Extractor, Formatter
 
 
-def generate_amazon_search_urls(amazon_urls):
-    global visited_urls
-    response = requests.get(listing_url, headers=custom_headers)
-    print(response.status_code)
-    soup_search = BeautifulSoup(response.text, "lxml")
-    link_elements = soup_search.select("[data-asin] h2 a")
-    page_data = []
+class AmazonUrlFormatter(Formatter):
+    def format(self, text):
+        if "ref=" in text:
+            url_parts = text.split("ref=")
+            formatted_url = url_parts[0]
+        else:
+            formatted_url = text
+        return f"https://www.amazon.ae{formatted_url}"
 
-    for link in link_elements:
-        full_url = urljoin(listing_url, link.attrs.get("href"))
-        if full_url not in visited_urls:
-            visited_urls.add(full_url)
-            print(f"Scraping product from {full_url[:100]}", flush=True)
-            product_info = get_product_info(full_url)
-            if product_info:
-                page_data.append(product_info)
 
-    next_page_el = soup_search.select_one("a.s-pagination-next")
-    if next_page_el:
-        next_page_url = next_page_el.attrs.get("href")
-        next_page_url = urljoin(listing_url, next_page_url)
-        print(f"Scraping next page: {next_page_url}", flush=True)
-        page_data += parse_listing(next_page_url)
+formatters = Formatter.get_all()
 
-    return page_data
+
+# generating search url for product
+def raw_search_url(product_name):
+    amazon_url = {
+        "name": product_name,
+        "link": f'https://www.amazon.ae/s?k={"+".join(product_name.split())}',
+    }
+    return amazon_url
+
+
+# generating amazon product search url by matching product titles
+def generate_amazon_search_url(amazon_url):
+    headers = json.loads(open("config/amazon_headers.json", "r").read())
+
+    urls = []
+    url_extractor = Extractor.from_yaml_file(
+        "selectors/amazon/url.yml", formatters=formatters
+    )
+
+    response = requests.get(amazon_url["link"], headers=headers)
+    if response.status_code != 200:
+        print(f"🔴 Failed to fetch {amazon_url['link']}", flush=True)
+        return
+
+    data = url_extractor.extract(response.text)
+    for product in data["products"]:
+        product_name = product["brand"].lower() + product["title"].lower()
+        keywords = amazon_url["name"].lower().split()
+        matched = all(keyword in product_name for keyword in keywords)
+        if matched:
+            urls.append(product["url"])
+        if len(urls) == 5:
+            break
+
+    return urls
