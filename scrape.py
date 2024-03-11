@@ -3,7 +3,7 @@ from selectorlib import Extractor
 
 # utilities
 from utils.file_utils import read_product_names, save_data_to_js_file
-from utils.url_utils import raw_search_url, generate_amazon_search_url
+from utils.url_utils import raw_search_url, amazon_search_url
 
 # scrapers
 from scrapers.amazon import scrape_amazon
@@ -18,8 +18,8 @@ def main():
         amazon_url = raw_search_url(name)
 
         # generate search urls for products
-        amazon_products_urls = generate_amazon_search_url(amazon_url)
-
+        amazon_products_urls = amazon_search_url(amazon_url)
+        
         # scrape product info from sites
         amazon_data = scrape_amazon(name, amazon_products_urls)
 

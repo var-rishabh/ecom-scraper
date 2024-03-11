@@ -1,9 +1,16 @@
 import json
+import random
 import requests
 from selectorlib import Extractor, Formatter
 
 # saving the product details to a html file
 from utils.file_utils import save_data_to_html_file
+
+# getting all proxies list
+proxies_list = open("config/proxies_list.txt", "r").read().strip().split("\n")
+headers = json.loads(open("config/headers.json", "r").read())
+
+MAX_TRIES = 20
 
 
 class PriceFormatter(Formatter):
@@ -31,8 +38,7 @@ formatters = Formatter.get_all()
 def scrape_amazon(product_name, amazon_products_urls):
     if not amazon_products_urls:
         return
-    
-    headers = json.loads(open("config/amazon_headers.json", "r").read())
+
     product_selector = Extractor.from_yaml_file(
         "selectors/amazon/productDetails.yml", formatters=formatters
     )
@@ -40,19 +46,28 @@ def scrape_amazon(product_name, amazon_products_urls):
     products_data = []
 
     for url in amazon_products_urls:
-        response = requests.get(url, headers=headers)
-        if response.status_code != 200:
-            print(f"🟡 Failed to fetch {url}")
-            continue
+        failed_tries = 0
+        
+        while failed_tries < MAX_TRIES:
+            try:
+                proxy = f"http://{random.choice(proxies_list)}"
 
-        product_data = product_selector.extract(response.text)
-        if not product_data["seller"]:
-            product_data["seller"] = "Amazon.ae"
-        if product_data:
-            product_data["url"] = url
-            save_data_to_html_file(product_name, "Amazon", response.text)
-            products_data.append(product_data)
-        else:
-            print(f"Failed to extract {url}")
+                header = random.choice(headers.get("amazon", []))
+
+                response = requests.get(url, headers=header, proxies={"http": proxy}, timeout=10)
+                if response.status_code == 200:              
+                    product_data = product_selector.extract(response.text)
+                    if not product_data["seller"]:
+                        product_data["seller"] = "Amazon.ae"
+                    if product_data and product_data["name"]:
+                        product_data["url"] = url
+                        save_data_to_html_file(product_name, "amazon", response.text)
+                        products_data.append(product_data)
+                        break
+                else:
+                    print(f"🟠 Failed to fetch {product_name} from Amazon, {response.url}")
+            except Exception as e:
+                print(f"🟠 Error fetching data from {product_name}: {e}")
+            failed_tries += 1
 
     return products_data

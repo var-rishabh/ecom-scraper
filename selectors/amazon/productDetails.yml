@@ -2,8 +2,13 @@ name:
     css: '#productTitle'
     xpath: null
     type: Text
-price:
+discount_price:
     css: 'span.a-offscreen'
+    xpath: null
+    type: Text
+    format: PriceFormatter
+list_price:
+    css: 'span.basisPrice span.a-offscreen'
     xpath: null
     type: Text
     format: PriceFormatter
