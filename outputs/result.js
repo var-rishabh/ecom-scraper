@@ -10,46 +10,6 @@ const data = {
         "seller": "Amazon.ae",
         "images": "https://m.media-amazon.com/images/I/711wsjBtWeL.__AC_SY445_SX342_QL70_ML2_.jpg",
         "url": "https://www.amazon.ae/Apple-iPhone-12-FaceTime-64GB/dp/B08L5Q1L2Q/"
-      },
-      {
-        "name": "Apple iPhone 12 (64GB) - Purple",
-        "discount_price": "AED 1,749.00",
-        "list_price": null,
-        "rating": "4.3",
-        "number_of_reviews": "1,300",
-        "seller": "Amazon.ae",
-        "images": "https://m.media-amazon.com/images/I/71VpQCVgwnS.__AC_SY445_SX342_QL70_ML2_.jpg",
-        "url": "https://www.amazon.ae/Apple-iPhone-12-64GB-Purple/dp/B093LCMWN2/"
-      },
-      {
-        "name": "Apple iPhone 12 (64GB) - Black",
-        "discount_price": "AED 1,749.00",
-        "list_price": null,
-        "rating": "4.3",
-        "number_of_reviews": "1,300",
-        "seller": "Amazon.ae",
-        "images": "https://m.media-amazon.com/images/I/71fVoqRC0wL.__AC_SY445_SX342_QL70_ML2_.jpg",
-        "url": "https://www.amazon.ae/Apple-iPhone-12-64GB-Black/dp/B08L5NZHK6/"
-      },
-      {
-        "name": "Apple iPhone 12 (64GB) - Green",
-        "discount_price": "AED 1,749.00",
-        "list_price": null,
-        "rating": "4.3",
-        "number_of_reviews": "1,300",
-        "seller": "Amazon.ae",
-        "images": "https://m.media-amazon.com/images/I/71cQWYVtcBL.__AC_SY445_SX342_QL70_ML2_.jpg",
-        "url": "https://www.amazon.ae/Apple-iPhone-12-64GB-Green/dp/B08L5RZTTK/"
-      },
-      {
-        "name": "IPhone 12 (64GB) - Blue (Renewed)",
-        "discount_price": "AED 1,299.00",
-        "list_price": null,
-        "rating": "5",
-        "number_of_reviews": null,
-        "seller": "ARDH ALSATIE PHONES TRADING L.L.C",
-        "images": "https://m.media-amazon.com/images/I/71JCd2pZJ6L.__AC_SX300_SY300_QL70_ML2_.jpg",
-        "url": "https://www.amazon.ae/IPhone-12-64GB-Blue-Renewed/dp/B0CVHBL54P/"
       }
     ],
     "Cartlow": [
@@ -60,76 +20,9 @@ const data = {
         "seller": "RLS-Cartlow-DCC",
         "images": "https://images.cartlow.net//product/93ae3b18-86a7-4614-9cc1-e0be939e3e1b.jpg",
         "url": "https://www.cartlow.com/uae/en/pdp/id10590292/apple-iphone-12-mini-64-gb-red.html"
-      },
-      {
-        "name": "Apple iPhone 12 Mini 64 GB - RED",
-        "discount_price": "AED 1,169.00",
-        "list_price": "AED 2,700.00",
-        "seller": "RLS-Cartlow-DCC",
-        "images": "https://images.cartlow.net//product/93ae3b18-86a7-4614-9cc1-e0be939e3e1b.jpg",
-        "url": "https://www.cartlow.com/uae/en/pdp/id10590362/apple-iphone-12-mini-64-gb-red.html"
-      },
-      {
-        "name": "Apple iPhone 12 Mini 64 GB - RED",
-        "discount_price": "AED 1,168.00",
-        "list_price": "AED 2,700.00",
-        "seller": "Refubzoo",
-        "images": "https://images.cartlow.net//product/93ae3b18-86a7-4614-9cc1-e0be939e3e1b.jpg",
-        "url": "https://www.cartlow.com/uae/en/pdp/id10611494/apple-iphone-12-mini-64-gb-red.html"
       }
     ],
-    "Noon": [
-      {
-        "name": "Apple iPhone 12 With Facetime 64GB Black 5G - International Specs",
-        "discount_price": "AED 1626.80",
-        "list_price": "AED 3399.00",
-        "rating": "4.5",
-        "number_of_reviews": "162",
-        "seller": "ELEC TRONIX",
-        "images": "https://f.nooncdn.com/p/v1686205660/N41247589A_1.jpg?format=jpg&width=240",
-        "url": "https://www.noon.com/iphone-12-with-facetime-64gb-black-5g-international-specs/N41247589A/p/?o=fc145cd964646d8f"
-      },
-      {
-        "name": "Apple iPhone 12 With Facetime 64GB White 5G - International Specs",
-        "discount_price": "AED 1699.00",
-        "list_price": "AED 3399.00",
-        "rating": "4.5",
-        "number_of_reviews": "132",
-        "seller": "noon",
-        "images": "https://f.nooncdn.com/p/v1667913927/N41247164A_1.jpg?format=jpg&width=240",
-        "url": "https://www.noon.com/iphone-12-with-facetime-64gb-white-5g-international-specs/N41247164A/p/?o=e7cecaa2de09d32d"
-      },
-      {
-        "name": "Apple iPhone 12 With FaceTime 64GB Black 5G - Middle East Version",
-        "discount_price": "AED 1779.85",
-        "list_price": "AED 3399.00",
-        "rating": "4.7",
-        "number_of_reviews": "130",
-        "seller": "ONTEL MOBILE",
-        "images": "https://f.nooncdn.com/p/v1666191716/N41044025A_1.jpg?format=jpg&width=240",
-        "url": "https://www.noon.com/iphone-12-with-facetime-64gb-black-5g-middle-east-version/N41044025A/p/?o=ea66a3feee518acb"
-      },
-      {
-        "name": "Apple iPhone 12 Dual Sim 64GB White 5G",
-        "discount_price": "AED 1699.00",
-        "list_price": "AED 3399.00",
-        "rating": "4.5",
-        "number_of_reviews": "2",
-        "seller": "noon",
-        "images": "https://f.nooncdn.com/p/v1637341082/N41247220A_1.jpg?format=jpg&width=240",
-        "url": "https://www.noon.com/iphone-12-dual-sim-64gb-white-5g/N41247220A/p/?o=ed9d7adb658c095f"
-      },
-      {
-        "name": "Apple iPhone 12 Dual Sim 64GB Purple 5G",
-        "discount_price": "AED 1699.00",
-        "list_price": "AED 3399.00",
-        "rating": "5.0",
-        "number_of_reviews": "2",
-        "seller": "noon",
-        "images": "https://f.nooncdn.com/p/v1638443543/N46875153A_1.jpg?format=jpg&width=240",
-        "url": "https://www.noon.com/iphone-12-dual-sim-64gb-purple-5g/N46875153A/p/?o=e2b71d19b5c1947f"
-      }
-    ]
+    "Noon": null
   },
   "iPhone 13 128 GB Green": {
     "Amazon": [
@@ -152,38 +45,6 @@ const data = {
         "seller": "RLS-Cartlow-DCC",
         "images": "https://images.cartlow.net//product/10885380062_0.jpg",
         "url": "https://www.cartlow.com/uae/en/pdp/id10589221/apple-iphone-13-pro-128-gb-alpine-green.html"
-      },
-      {
-        "name": "Apple iPhone 13 Pro 128 GB - Alpine Green",
-        "discount_price": "AED 2,450.00",
-        "list_price": "AED 4,474.00",
-        "seller": "RLS-Cartlow-DCC",
-        "images": "https://images.cartlow.net//product/10885380062_0.jpg",
-        "url": "https://www.cartlow.com/uae/en/pdp/id10589226/apple-iphone-13-pro-128-gb-alpine-green.html"
-      },
-      {
-        "name": "Apple iPhone 13 Pro 128 GB - Alpine Green",
-        "discount_price": "AED 2,549.00",
-        "list_price": "AED 4,474.00",
-        "seller": "RLS-Cartlow-DCC",
-        "images": "https://images.cartlow.net//product/10885380062_0.jpg",
-        "url": "https://www.cartlow.com/uae/en/pdp/id10589252/apple-iphone-13-pro-128-gb-alpine-green.html"
-      },
-      {
-        "name": "Apple iPhone 13 128GB - Green",
-        "discount_price": "AED 1,989.00",
-        "list_price": "AED 3,395.00",
-        "seller": "RLS-Cartlow-DCC",
-        "images": "https://images.cartlow.net//product/9a721794-3269-43d4-b2e6-9e61a0d553e5.jpg",
-        "url": "https://www.cartlow.com/uae/en/pdp/id10589082/apple-iphone-13-128gb-green.html"
-      },
-      {
-        "name": "Apple iPhone 13 128GB - Green",
-        "discount_price": "AED 1,999.00",
-        "list_price": "AED 2,952.00",
-        "seller": "RLS-Cartlow-DCC",
-        "images": "https://images.cartlow.net//product/9a721794-3269-43d4-b2e6-9e61a0d553e5.jpg",
-        "url": "https://www.cartlow.com/uae/en/pdp/id10589089/apple-iphone-13-128gb-green.html"
       }
     ],
     "Noon": [
@@ -196,36 +57,6 @@ const data = {
         "seller": "noon",
         "images": "https://f.nooncdn.com/p/v1648034114/N52866937A_1.jpg?format=jpg&width=240",
         "url": "https://www.noon.com/iphone-13-128gb-green-5g-with-facetime-uae-version/N52866937A/p/?o=fdcb1228bf1bb8fe"
-      },
-      {
-        "name": "Apple iPhone 13 128GB Green 5G With FaceTime - International version",
-        "discount_price": "AED 2153.00",
-        "list_price": "AED 3399.00",
-        "rating": "4.6",
-        "number_of_reviews": "452",
-        "seller": "ORIZOR TRADING L.L.C",
-        "images": "https://f.nooncdn.com/p/v1686132002/N52943836A_1.jpg?format=jpg&width=240",
-        "url": "https://www.noon.com/iphone-13-128gb-green-5g-with-facetime-international-version/N52943836A/p/?o=bacd8c9de736729b"
-      },
-      {
-        "name": "Apple Renewed - iPhone 13 Pro max 128GB Alpine Green 5G With Facetime - International version",
-        "discount_price": "AED 2399.00",
-        "list_price": "AED 2493.00",
-        "rating": "4.2",
-        "number_of_reviews": "14",
-        "seller": "ET Mobile Trade",
-        "images": "https://f.nooncdn.com/p/v1663915760/N53352290A_1.jpg?format=jpg&width=240",
-        "url": "https://www.noon.com/renewed-iphone-13-pro-max-128gb-alpine-green-5g-with-facetime-international-version/N53352290A/p/?o=dc1648ff9cb6802b"
-      },
-      {
-        "name": "Apple Renewed - iPhone 13 Pro 128GB Alpine Green 5G With FaceTime - International version",
-        "discount_price": "AED 2080.00",
-        "list_price": "AED 2176.00",
-        "rating": "3.5",
-        "number_of_reviews": "13",
-        "seller": "GYZ2",
-        "images": "https://f.nooncdn.com/p/v1663915748/N53352248A_1.jpg?format=jpg&width=240",
-        "url": "https://www.noon.com/renewed-iphone-13-pro-128gb-alpine-green-5g-with-facetime-international-version/N53352248A/p/?o=a9d05ba139a28e0e"
       }
     ]
   },
@@ -280,46 +111,6 @@ const data = {
         "seller": "Electronics Collection",
         "images": "https://f.nooncdn.com/p/v1687430483/N53374783A_1.jpg?format=jpg&width=240",
         "url": "https://www.noon.com/galaxy-s23-ultra-5g-dual-sim-phantom-black-12gb-ram-256gb-middle-east-version/N53374783A/p/?o=f101ffa6569ccada"
-      },
-      {
-        "name": "Samsung Galaxy S23 Ultra 5G Dual SIM Green 12GB RAM 256GB  - Middle East Version",
-        "discount_price": "AED 2899.00",
-        "list_price": "AED 4949.00",
-        "rating": "4.5",
-        "number_of_reviews": "2094",
-        "seller": "Electronics Collection",
-        "images": "https://f.nooncdn.com/p/v1687430481/N53374466A_1.jpg?format=jpg&width=240",
-        "url": "https://www.noon.com/galaxy-s23-ultra-5g-dual-sim-green-12gb-ram-256gb-middle-east-version/N53374466A/p/?o=f9d928ee77de8a3f"
-      },
-      {
-        "name": "Samsung Galaxy S23 Ultra 5G Dual SIM Phantom Black 12GB RAM 256GB - International Version",
-        "discount_price": "AED 2899.00",
-        "list_price": "AED 4949.00",
-        "rating": "4.4",
-        "number_of_reviews": "329",
-        "seller": "ELEC TRONIX",
-        "images": "https://f.nooncdn.com/p/v1687430487/N53379147A_1.jpg?format=jpg&width=240",
-        "url": "https://www.noon.com/galaxy-s23-ultra-5g-dual-sim-phantom-black-12gb-ram-256gb-international-version/N53379147A/p/?o=f81c08f6cb98597a"
-      },
-      {
-        "name": "Samsung Galaxy S23 Ultra 5G Dual SIM Green 12GB RAM 256GB - International Version",
-        "discount_price": "AED 2899.00",
-        "list_price": "AED 4949.00",
-        "rating": "4.4",
-        "number_of_reviews": "288",
-        "seller": "ELEC TRONIX",
-        "images": "https://f.nooncdn.com/p/v1687430490/N53379302A_1.jpg?format=jpg&width=240",
-        "url": "https://www.noon.com/galaxy-s23-ultra-5g-dual-sim-green-12gb-ram-256gb-international-version/N53379302A/p/?o=b34592a7499f158d"
-      },
-      {
-        "name": "Samsung Galaxy S23 Ultra 5G Dual SIM Lavender 12GB RAM 256GB  - Middle East Version",
-        "discount_price": "AED 3047.65",
-        "list_price": "AED 4949.00",
-        "rating": "4.5",
-        "number_of_reviews": "305",
-        "seller": "IKA_2016",
-        "images": "https://f.nooncdn.com/p/v1687430482/N53374477A_1.jpg?format=jpg&width=240",
-        "url": "https://www.noon.com/galaxy-s23-ultra-5g-dual-sim-lavender-12gb-ram-256gb-middle-east-version/N53374477A/p/?o=dceacc93c96d1f2a"
       }
     ]
   },
@@ -337,38 +128,7 @@ const data = {
       }
     ],
     "Cartlow": null,
-    "Noon": [
-      {
-        "name": "ASUS TUF Gaming F15 FX506LHB-HN323W Laptop With 15.6-Inch Display, Core i5-10300H Processor/8GB RAM/512GGB SSD/2GB Nvidia GTX1650 Graphics Card/Windows 11 Home English/Arabic black",
-        "discount_price": "AED 3199.00",
-        "list_price": null,
-        "rating": null,
-        "number_of_reviews": null,
-        "seller": "AL ZUBAIR COMPUTERS LLC",
-        "images": "https://f.nooncdn.com/p/v1679122991/N53392972A_1.jpg?format=jpg&width=240",
-        "url": "https://www.noon.com/tuf-gaming-f15-fx506lhb-hn323w-laptop-with-15-6-inch-display-core-i5-10300h-processor-8gb-ram-512ggb-ssd-2gb-nvidia-gtx1650-graphics-card-windows-11-home-english-arabic-black/N53392972A/p/?o=f85a656cd972e0fd"
-      },
-      {
-        "name": "ASUS TUF Gaming F15 FX506LH-HN111T Laptop With 15.6 inch Display / Intel Core i5 10300H / 16GB RAM / 512GB SSD / Nvidia Geforce GTX 1650 4GB / Windows English/Arabic Fortress Gray",
-        "discount_price": "AED 3329.00",
-        "list_price": "AED 4070.00",
-        "rating": "4.7",
-        "number_of_reviews": "3",
-        "seller": "Al Lavisha Computers",
-        "images": "https://f.nooncdn.com/p/v1632304497/N48139485A_1.jpg?format=jpg&width=240",
-        "url": "https://www.noon.com/tuf-gaming-f15-fx506lh-hn111t-laptop-with-15-6-inch-display-intel-core-i5-10300h-16gb-ram-512gb-ssd-nvidia-geforce-gtx-1650-4gb-windows-english-arabic-fortress-gray/N48139485A/p/?o=ce8b1028b22fd80d"
-      },
-      {
-        "name": "ASUS TUF F15 FX506LH-HN111T 15.6 FHD 144Hz Intel Core i5-10300H 16GB Ram-512GB SSD 4GB NVIDIA GeForce GTX 1650 WIN10 + Gaming Mouse + AVG English/Arabic Grey",
-        "discount_price": "AED 3999.00",
-        "list_price": "AED 4799.00",
-        "rating": null,
-        "number_of_reviews": null,
-        "seller": "Al Lavisha Computers",
-        "images": "https://f.nooncdn.com/p/v1633504893/N51238398A_1.jpg?format=jpg&width=240",
-        "url": "https://www.noon.com/tuf-f15-fx506lh-hn111t-15-6-fhd-144hz-intel-core-i5-10300h-16gb-ram-512gb-ssd-4gb-nvidia-geforce-gtx-1650-win10-gaming-mouse-avg-english-arabic-grey/N51238398A/p/?o=b2da3360b7fb618e"
-      }
-    ]
+    "Noon": null
   },
   "Asus Tuf A15 15.6 RTX 4070": {
     "Amazon": [
