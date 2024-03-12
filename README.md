@@ -1,6 +1,6 @@
-# Ecom Scrapper
+# Ecom Scraper
 
-Ecom Scrapper is a Python project for scraping product details from e-commerce websites like Amazon, Noon, and Cartlow.
+Ecom Scraper is a Python project for scraping product details from e-commerce websites like Amazon, Noon, and Cartlow.
 It allows you to extract product information such as title, price, rating, and description, and store it in a structured format for further analysis.
 
 ![Python](https://img.shields.io/badge/python-blue.svg?style=for-the-badge&logo=python&logoColor=white)
@@ -11,7 +11,7 @@ It allows you to extract product information such as title, price, rating, and d
 ```
 Step 1: Clone this repository
 
-$ git clone https://github.com/var-rishabh/ecom-scrapper.git
+$ git clone https://github.com/var-rishabh/ecom-scraper.git
 ```
 
 ```
