@@ -1,3 +1,4 @@
+import re
 import json
 import random
 import requests
@@ -6,7 +7,7 @@ from selectorlib import Extractor, Formatter
 proxies_list = open("config/proxies_list.txt", "r").read().strip().split("\n")
 headers = json.loads(open("config/headers.json", "r").read())
 
-MAX_TRIES = 20
+MAX_TRIES = 10
 
 
 class AmazonUrlFormatter(Formatter):
@@ -22,13 +23,23 @@ class AmazonUrlFormatter(Formatter):
 formatters = Formatter.get_all()
 
 
+def transform_name(name):
+    # Remove space between numbers and units
+    transformed_name = re.sub(r"(\d+)\s+(GB|MB|TB)", r"\1\2", name)
+    return transformed_name
+
+
 # generating search url for product
 def raw_search_url(product_name):
     amazon_url = {
         "name": product_name,
         "link": f'https://www.amazon.ae/s?k={"+".join(product_name.split())}',
     }
-    return amazon_url
+    noon_url = {
+        "name": product_name,
+        "link": f"https://www.noon.com/_svc/catalog/api/v3/u/search/?limit=50&originalQuery={transform_name(product_name)}&q={transform_name(product_name)}&sort%5Bby%5D=popularity&searchDebug=false&sort%5Bdir%5D=desc",
+    }
+    return amazon_url, noon_url
 
 
 # finding amazon product search url by matching product titles
@@ -52,7 +63,9 @@ def amazon_search_url(amazon_url):
             if response.status_code == 200:
                 data = url_extractor.extract(response.text)
                 for product in data["products"]:
-                    product_name = product["brand"].lower() + product["title"].lower()
+                    product_name = (
+                        product["brand"].lower() + " " + product["title"].lower()
+                    )
                     keywords = amazon_url["name"].lower().split()
                     matched = all(keyword in product_name for keyword in keywords)
                     if matched:
@@ -121,11 +134,58 @@ def cartlow_search_url(product_name):
                 return urls
 
             print(
-                f"🟩 Failed to fetch {product_name} from Cartlow. Trying again",
+                f"🟪 Failed to fetch {product_name} from Cartlow. Trying again",
                 flush=True,
             )
             failed_tries += 1
 
         except Exception as e:
             failed_tries += 1
-            print(f"🟩 Error fetching data for {product_name} from Cartlow. {e}")
+            print(f"🟪 Error fetching data for {product_name} from Cartlow. {e}")
+
+
+# finding noon product search urls with product list url
+def noon_search_url(noon_url):
+    urls = []
+    failed_tries = 0
+
+    while failed_tries < MAX_TRIES:
+        try:
+            proxy = f"http://{random.choice(proxies_list)}"
+            header = random.choice(headers.get("noon", []))
+            response = requests.get(
+                noon_url["link"], headers=header, proxies={"http": proxy}, timeout=10
+            )
+
+            data = response.json()
+            if response.status_code == 200 and data["hits"]:
+                for product in data["hits"]:
+                    product_Title = (
+                        product["brand"].lower() + " " + product["name"].lower()
+                    )
+                    keywords = noon_url["name"].lower().split()
+                    matched = all(keyword in product_Title for keyword in keywords)
+                    if matched:
+                        urls.append(
+                            "https://www.noon.com/"
+                            + product["url"]
+                            + "/"
+                            + product["sku"]
+                            + "/p/?o="
+                            + product["offer_code"]
+                        )
+                    if len(urls) == 5:
+                        break
+
+                failed_tries = 0
+                return urls
+
+            print(
+                f"🟨 Failed to fetch {noon_url['name']} from Noon. Trying again",
+                flush=True,
+            )
+            failed_tries += 1
+
+        except Exception as e:
+            failed_tries += 1
+            print(f"🟨 Error fetching data for {noon_url['name']} from Noon. {e}")

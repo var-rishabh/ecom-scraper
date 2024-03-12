@@ -12,60 +12,67 @@ headers = json.loads(open("config/headers.json", "r").read())
 
 MAX_TRIES = 10
 
+class TitleFormatter(Formatter):
+    def format(self, text):
+        if "UAE | Dubai, Abu Dhabi" in text:
+            return text.split(" UAE | Dubai, Abu Dhabi")[0]
+        else:
+            return text
+
 
 class PriceFormatter(Formatter):
     def format(self, text):
-        if "AED" in text:
-            return f"AED {text.split('AED')[1].strip()}"
+        if "Inclusive of VAT" in text:
+            return text.split(" Inclusive of VAT")[0]
+        else:
+            return text
 
 
-class RatingFormatter(Formatter):
+class ReviewFormatter(Formatter):
     def format(self, text):
-        if "out of 5" in text:
-            return text.split(" out of 5")[0]
-
-
-class ReviewCountFormatter(Formatter):
-    def format(self, text):
-        if "ratings" in text:
-            return text.split(" ratings")[0]
+        text = text.split(" ")
+        if len(text) == 4:
+            return text[2]
+        else:
+            return text
 
 
 formatters = Formatter.get_all()
 
 
-# scraping product details from amazon
-def scrape_amazon(product_name, amazon_products_urls):
-    if not amazon_products_urls:
+# scraping product details from noon
+def scrape_noon(product_name, noon_products_urls):
+    if not noon_products_urls:
         return
 
     product_selector = Extractor.from_yaml_file(
-        "selectors/amazon/productDetails.yml", formatters=formatters
+        "selectors/noon/productDetails.yml", formatters=formatters
     )
 
     products_data = []
 
-    for url in amazon_products_urls:
+    for url in noon_products_urls:
         failed_tries = 0
-        
+
         while failed_tries < MAX_TRIES:
             try:
                 proxy = f"http://{random.choice(proxies_list)}"
+                header = random.choice(headers.get("noon", []))
 
-                header = random.choice(headers.get("amazon", []))
-
-                response = requests.get(url, headers=header, proxies={"http": proxy}, timeout=10)
-                if response.status_code == 200:              
+                response = requests.get(
+                    url, headers=header, proxies={"http": proxy}, timeout=10
+                )
+                if response.status_code == 200:
                     product_data = product_selector.extract(response.text)
-                    if not product_data["seller"]:
-                        product_data["seller"] = "Amazon.ae"
                     if product_data and product_data["name"]:
                         product_data["url"] = url
-                        save_data_to_html_file(product_name, "amazon", response.text)
+                        save_data_to_html_file(product_name, "noon", response.text)
                         products_data.append(product_data)
                         break
                 else:
-                    print(f"🟠 Failed to fetch {product_name} from Amazon, {response.url}")
+                    print(
+                        f"🟠 Failed to fetch {product_name} from noon, {response.url}"
+                    )
             except Exception as e:
                 print(f"🟠 Error fetching data from {product_name}: {e}")
             failed_tries += 1

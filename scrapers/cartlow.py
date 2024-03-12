@@ -10,7 +10,7 @@ from utils.file_utils import save_data_to_html_file
 proxies_list = open("config/proxies_list.txt", "r").read().strip().split("\n")
 headers = json.loads(open("config/headers.json", "r").read())
 
-MAX_TRIES = 20
+MAX_TRIES = 10
 
 
 class PriceFormatter(Formatter):
@@ -52,10 +52,10 @@ def scrape_cartlow(product_name, cartlow_products_urls):
                         break
                 else:
                     print(
-                        f"🟠 Failed to fetch {product_name} from cartlow, {response.url}"
+                        f"🟣 Failed to fetch {product_name} from cartlow, {response.url}"
                     )
             except Exception as e:
-                print(f"🟠 Error fetching data from {product_name}: {e}")
+                print(f"🟣 Error fetching data from {product_name}: {e}")
             failed_tries += 1
 
     return products_data

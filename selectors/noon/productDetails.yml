@@ -1,0 +1,32 @@
+name:
+    css: 'title'
+    xpath: null
+    type: Text
+    format: TitleFormatter
+discount_price:
+    css: '.priceNow'
+    xpath: null
+    type: Text
+    format: PriceFormatter
+list_price:
+    css: '.priceWas'
+    xpath: null
+    type: Text
+    format: PriceFormatter
+rating:
+    css: '.eSWjEM'
+    xpath: null
+    type: Text
+number_of_reviews:
+    css: '.hMcMTN'
+    xpath: null
+    type: Text
+    format: ReviewFormatter
+seller:
+    css: '.allOffers'
+    xpath: null
+    type: Text
+images:
+    css: 'meta[property="og:image"]'
+    type: Attribute
+    attribute: content
