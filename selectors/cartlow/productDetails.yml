@@ -1,0 +1,22 @@
+name:
+    css: 'h1#var_name'
+    xpath: null
+    type: Text
+discount_price:
+    css: 'span#var_price'
+    xpath: null
+    type: Text
+    format: PriceFormatter
+list_price:
+    css: 'span#var_market_price'
+    xpath: null
+    type: Text
+    format: PriceFormatter
+seller:
+    css: 'span#shop_name'
+    xpath: null
+    type: Text
+images:
+    css: 'img.cz-image-zoom'
+    type: Attribute
+    attribute: src

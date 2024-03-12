@@ -1,5 +1,5 @@
 import json
-import random 
+import random
 import requests
 from selectorlib import Extractor, Formatter
 
@@ -31,7 +31,7 @@ def raw_search_url(product_name):
     return amazon_url
 
 
-# generating amazon product search url by matching product titles
+# finding amazon product search url by matching product titles
 def amazon_search_url(amazon_url):
     urls = []
     failed_tries = 0
@@ -59,16 +59,73 @@ def amazon_search_url(amazon_url):
                         urls.append(product["url"])
                     if len(urls) == 5:
                         break
+
                 failed_tries = 0
                 return urls
 
-            else:
-                failed_tries += 1
-                print(
-                    f"🔸 Failed to fetch {amazon_url['link']}, {response.url}",
-                    flush=True,
-                )
+            failed_tries += 1
+            print(
+                f"🟧 Failed to fetch {amazon_url['link']}, {response.url}. Trying again",
+                flush=True,
+            )
 
         except Exception as e:
             failed_tries += 1
-            print(f'🔸 Error fetching data from {amazon_url["link"]}: {e}')
+            print(f'🟧 Error fetching data from {amazon_url["link"]}: {e}')
+
+
+# finding cartlow product search urls with product name
+def cartlow_search_url(product_name):
+    urls = []
+    failed_tries = 0
+
+    while failed_tries < MAX_TRIES:
+        try:
+            proxy = f"http://{random.choice(proxies_list)}"
+            body_data = {
+                "brand": "",
+                "category": "",
+                "brandId": [],
+                "shopId": [],
+                "storeId": "",
+                "categoryId": [],
+                "sectionId": '""',
+                "elementId": "",
+                "conditionId": [],
+                "priceMin": 1,
+                "priceMax": 50000,
+                "sortBy": "popularity",
+                "subCategoryId": [],
+                "query": product_name,
+                "offset": 0,
+            }
+
+            response = requests.post(
+                "https://www.cartlow.com/uae/en/search",
+                proxies={"http": proxy},
+                json=body_data,
+            )
+
+            data = response.json()
+            if response.status_code == 200 and data["success"] == True:
+                for product in data["results"]:
+                    product_Title = product["title"].lower()
+                    keywords = product_name.lower().split()
+                    matched = all(keyword in product_Title for keyword in keywords)
+                    if matched:
+                        urls.append("https://www.cartlow.com" + product["url"])
+                    if len(urls) == 5:
+                        break
+
+                failed_tries = 0
+                return urls
+
+            print(
+                f"🟩 Failed to fetch {product_name} from Cartlow. Trying again",
+                flush=True,
+            )
+            failed_tries += 1
+
+        except Exception as e:
+            failed_tries += 1
+            print(f"🟩 Error fetching data for {product_name} from Cartlow. {e}")
