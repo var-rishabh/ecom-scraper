@@ -1,8 +1,8 @@
-import re
 import json
 import random
 import requests
 from selectorlib import Extractor, Formatter
+from utils.name_utils import transform_noon_url_name
 
 proxies_list = open("config/proxies_list.txt", "r").read().strip().split("\n")
 headers = json.loads(open("config/headers.json", "r").read())
@@ -23,12 +23,6 @@ class AmazonUrlFormatter(Formatter):
 formatters = Formatter.get_all()
 
 
-def transform_name(name):
-    # Remove space between numbers and units
-    transformed_name = re.sub(r"(\d+)\s+(GB|MB|TB)", r"\1\2", name)
-    return transformed_name
-
-
 # generating search url for product
 def raw_search_url(product_name):
     amazon_url = {
@@ -37,7 +31,7 @@ def raw_search_url(product_name):
     }
     noon_url = {
         "name": product_name,
-        "link": f"https://www.noon.com/_svc/catalog/api/v3/u/search/?limit=50&originalQuery={transform_name(product_name)}&q={transform_name(product_name)}&sort%5Bby%5D=popularity&searchDebug=false&sort%5Bdir%5D=desc",
+        "link": f"https://www.noon.com/_svc/catalog/api/v3/u/search/?limit=50&originalQuery={transform_noon_url_name(product_name)}&q={transform_noon_url_name(product_name)}&sort%5Bby%5D=popularity&searchDebug=false&sort%5Bdir%5D=desc",
     }
     return amazon_url, noon_url
 
@@ -48,7 +42,7 @@ def amazon_search_url(amazon_url):
     failed_tries = 0
 
     url_extractor = Extractor.from_yaml_file(
-        "selectors/amazon/url.yml", formatters=formatters
+        "scraper/selectors/amazon_url.yml", formatters=formatters
     )
 
     while failed_tries < MAX_TRIES:
@@ -120,7 +114,7 @@ def cartlow_search_url(product_name):
             )
 
             data = response.json()
-            if response.status_code == 200 and data["success"] == True:
+            if response.status_code == 200 and (data["success"] == True and len(data["results"]) > 0):
                 for product in data["results"]:
                     product_Title = product["title"].lower()
                     keywords = product_name.lower().split()
@@ -158,7 +152,7 @@ def noon_search_url(noon_url):
             )
 
             data = response.json()
-            if response.status_code == 200 and data["hits"]:
+            if response.status_code == 200 and len(data["hits"]) > 0:
                 for product in data["hits"]:
                     product_Title = (
                         product["brand"].lower() + " " + product["name"].lower()

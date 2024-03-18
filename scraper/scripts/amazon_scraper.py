@@ -40,7 +40,7 @@ def scrape_amazon(product_name, amazon_products_urls):
         return
 
     product_selector = Extractor.from_yaml_file(
-        "selectors/amazon/productDetails.yml", formatters=formatters
+        "scraper/selectors/amazon_product.yml", formatters=formatters
     )
 
     products_data = []

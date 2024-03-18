@@ -1,26 +1,51 @@
 import os
-import json
+import pandas as pd
 
-def read_product_names(file_path):
-    with open(file_path, "r") as file:
-        product_names = [line.strip() for line in file.readlines()]
-        return product_names
+from utils.name_utils import transform_name, transform_category
 
 
-def save_data_to_js_file(data):
-    with open("outputs/result.js", "w") as file:
-        file.write(f"const data = {json.dumps(data, indent=2)};")
+# to extract product_id, brand, name and category from the csv or xlsx file
+def get_file_data(file_data, file_name):
+    data = None
+    if file_name.endswith(".csv"):
+        data = read_csv(file_data)
+    elif file_name.endswith((".xlsx", ".xls")):
+        data = pd.read_excel(file_data)
+
+    products = []
+    for index, row in data.iterrows():
+        product_info = {
+            "product_id": row["product_id"],
+            "brand": row["brand_name"],
+            "name": row["product_name"],
+            "search_name": transform_name(f'{row["brand_name"]} {row["product_name"]}'),
+            "category": transform_category(row["category"]),
+        }
+        if (
+            row["brand_name"] == "FALSE"
+            or row["brand_name"] == "False"
+            or row["brand_name"] == False
+        ):
+            product_info["brand"] = ""
+            product_info["search_name"] = transform_name(f'{row["product_name"]}')
+        elif row["brand_name"] == "generic" or row["brand_name"] == "Generic":
+            product_info["brand"] = "Generic"
+            product_info["search_name"] = transform_name(f'{row["product_name"]}')
+        products.append(product_info)
+
+    return products
 
 
+# saving the scraped html page to a file
 def save_data_to_html_file(product_name, site_name, data):
     folder = f"data/HTML/{product_name}"
     if not os.path.exists(folder):
         os.makedirs(folder)
-        
+
     site_folder = f"{folder}/{site_name}"
     if not os.path.exists(site_folder):
         os.makedirs(site_folder)
-        
+
     file_name = f"{site_folder}/link{len(os.listdir(site_folder))+1}.html"
     with open(file_name, "w", encoding="utf-8") as file:
         file.write(data)
