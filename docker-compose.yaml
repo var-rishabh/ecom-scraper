@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  web:
+    container_name: web-container
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        requirements_file: requirements.txt
+    stdin_open: true
+    tty: true
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mongodb
+    volumes:
+      - .:/app
+      - data:/app/data
+    restart: always
+
+  mongodb:
+    image: mongo:latest
+    container_name: db-container
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    restart: always
+
+volumes:
+  data:
+    driver: local
+  mongo_data:
+    driver: local

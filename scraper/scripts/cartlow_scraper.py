@@ -4,7 +4,7 @@ import requests
 from selectorlib import Extractor, Formatter
 
 # saving the product details to a html file
-from utils.file_utils import save_data_to_html_file
+from utils.file_utils import delete_file, save_data_to_html_file
 
 # getting all proxies list
 proxies_list = open("config/proxies_list.txt", "r").read().strip().split("\n")
@@ -31,9 +31,11 @@ def scrape_cartlow(product_name, cartlow_products_urls):
     )
 
     products_data = []
+    success_url_num = 0
 
     for url in cartlow_products_urls:
         failed_tries = 0
+        success_url_num += 1
 
         while failed_tries < MAX_TRIES:
             try:
@@ -47,7 +49,8 @@ def scrape_cartlow(product_name, cartlow_products_urls):
                     product_data = product_selector.extract(response.text)
                     if product_data and product_data["name"]:
                         product_data["url"] = url
-                        save_data_to_html_file(product_name, "cartlow", response.text)
+                        delete_file(product_name, "cartlow", f"cartlow{success_url_num}.html")
+                        save_data_to_html_file(product_name, "cartlow", f"cartlow{success_url_num}", response.text)
                         products_data.append(product_data)
                         break
                 else:

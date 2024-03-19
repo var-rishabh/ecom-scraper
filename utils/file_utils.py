@@ -37,7 +37,7 @@ def get_file_data(file_data, file_name):
 
 
 # saving the scraped html page to a file
-def save_data_to_html_file(product_name, site_name, data):
+def save_data_to_html_file(product_name, site_name, file_name, data):
     folder = f"data/HTML/{product_name}"
     if not os.path.exists(folder):
         os.makedirs(folder)
@@ -46,6 +46,13 @@ def save_data_to_html_file(product_name, site_name, data):
     if not os.path.exists(site_folder):
         os.makedirs(site_folder)
 
-    file_name = f"{site_folder}/link{len(os.listdir(site_folder))+1}.html"
+    file_name = f"{site_folder}/{file_name}.html"
     with open(file_name, "w", encoding="utf-8") as file:
         file.write(data)
+
+
+# deleting the existing file in the folder
+def delete_file(product_name, site_name, file_name):
+    file_path = f"data/HTML/{product_name}/{site_name}/{file_name}"
+    if os.path.exists(file_path):
+        os.remove(file_path)
