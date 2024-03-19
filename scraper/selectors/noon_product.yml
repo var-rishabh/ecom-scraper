@@ -30,3 +30,13 @@ images:
     css: 'meta[property="og:image"]'
     type: Attribute
     attribute: content
+renewed:
+    css: '.sc-4184fc33-3.jTJaSP.active'
+    xpath: null
+    multiple: true
+    type: Text
+    children:
+        renewed_grade:
+            css: '.sc-4184fc33-3.jTJaSP.active'
+            xpath: null
+            type: Text

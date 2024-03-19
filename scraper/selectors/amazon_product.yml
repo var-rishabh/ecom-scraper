@@ -30,3 +30,7 @@ images:
     css: '.imgTagWrapper img'
     type: Attribute
     attribute: src
+renewed:
+    css: 'div[data-feature-name="renewedSingleOfferCaption"] .a-text-normal'
+    xpath: null
+    type: Text

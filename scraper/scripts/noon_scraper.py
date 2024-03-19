@@ -12,6 +12,7 @@ headers = json.loads(open("config/headers.json", "r").read())
 
 MAX_TRIES = 10
 
+
 class TitleFormatter(Formatter):
     def format(self, text):
         if "UAE | Dubai, Abu Dhabi" in text:
@@ -65,6 +66,8 @@ def scrape_noon(product_name, noon_products_urls):
                 if response.status_code == 200:
                     product_data = product_selector.extract(response.text)
                     if product_data and product_data["name"]:
+                        if product_data["renewed"]:
+                            product_data["renewed"] = product_data["renewed"][1]["renewed_grade"]
                         product_data["url"] = url
                         save_data_to_html_file(product_name, "noon", response.text)
                         products_data.append(product_data)
@@ -75,6 +78,7 @@ def scrape_noon(product_name, noon_products_urls):
                     )
             except Exception as e:
                 print(f"🟡 Error fetching data from {product_name}: {e}")
-            failed_tries += 1
+                failed_tries += 1
 
+            failed_tries += 1
     return products_data
