@@ -9,47 +9,21 @@ It allows you to extract product information such as title, price, rating, and d
 ## Setup
 
 ```
-Step 1: Clone this repository
+Step 1: Clone this repository and move to the directory
 
 $ git clone https://github.com/var-rishabh/ecom-scraper.git
-```
-
-```
-Step 2: Setup the virtual environment and activate it
 
 $ cd finaccru-web
-
-$ python -m venv venv
-
-$ ./venv/Scripts/activate
 ```
 
 ```
-Step 3: Install the required Python packages
+Step 2: Run the docker container
 
-$ pip install -r requirements.txt
-```
-
-
-## Usage
-
-```
-Step 1: Add product names to the data/products_names.txt file, each on a new line.
+$ docker-compose up --build -d
 ```
 
 ```
-Step 2: Run the scrape.py script to start scraping
-
-$ python scrape.py
+Step 3: Go to port localhost:8000/docs
 ```
-
-```
-Step 3: The scraped data will be saved in the outputs directory in JavaScript format (result.js).
-```
-
-## Adding More Products
-To add more products to the scraping list, simply append the product names to the `data/products_names.txt` file and rerun the `scrape.py` script. 
-
-The new products data will be appended to the existing `result.js` file in outputs folder.
 
 > Note: You can find the HTML file of all the products page fetched from the web in `data/HTMl` folder to verify the scraped information.
