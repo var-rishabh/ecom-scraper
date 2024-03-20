@@ -52,6 +52,9 @@ def download_products():
         "amazon_url",
         "cartlow_url",
         "noon_url",
+        "amazon_grade",
+        "cartlow_grade",
+        "noon_grade"
     ]
 
     all_products = []
@@ -85,6 +88,7 @@ def download_products():
                 if "number_of_reviews" in amazon_data
                 else "NA"
             )
+            data["amazon_grade"] = amazon_data["grade"] if "grade" in amazon_data else "NA"
             data["amazon_url"] = amazon_data["url"] if "url" in amazon_data else "NA"
             break
         for cartlow_data in product["cartlow"]:
@@ -104,6 +108,7 @@ def download_products():
                 if "number_of_reviews" in cartlow_data
                 else "NA"
             )
+            data["cartlow_grade"] = cartlow_data["grade"] if "grade" in cartlow_data else "NA"
             data["cartlow_url"] = cartlow_data["url"] if "url" in cartlow_data else "NA"
             break
         for noon_data in product["noon"]:
@@ -117,6 +122,7 @@ def download_products():
                 if "number_of_reviews" in noon_data
                 else "NA"
             )
+            data["noon_grade"] = noon_data["grade"] if "grade" in noon_data else "NA"
             data["noon_url"] = noon_data["url"] if "url" in noon_data else "NA"
             break
         all_products.append(data)
@@ -146,6 +152,9 @@ def download_products():
                 product["amazon_url"],
                 product["cartlow_url"],
                 product["noon_url"],
+                product["amazon_grade"],
+                product["cartlow_grade"],
+                product["noon_grade"]
             ]
         )
 

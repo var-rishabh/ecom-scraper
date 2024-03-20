@@ -30,7 +30,7 @@ images:
     css: 'meta[property="og:image"]'
     type: Attribute
     attribute: content
-renewed:
+grade:
     css: '.sc-4184fc33-3.jTJaSP.active'
     xpath: null
     multiple: true

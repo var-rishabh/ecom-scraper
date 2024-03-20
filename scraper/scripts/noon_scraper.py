@@ -68,8 +68,8 @@ def scrape_noon(product_name, noon_products_urls):
                 if response.status_code == 200:
                     product_data = product_selector.extract(response.text)
                     if product_data and product_data["name"]:
-                        if product_data["renewed"]:
-                            product_data["renewed"] = product_data["renewed"][1]["renewed_grade"]
+                        if product_data["grade"]:
+                            product_data["grade"] = product_data["grade"][1]["renewed_grade"]
                         product_data["url"] = url
                         delete_file(product_name, "noon", f"noon{success_url_num}.html")
                         save_data_to_html_file(product_name, "noon", f"noon{success_url_num}", response.text)

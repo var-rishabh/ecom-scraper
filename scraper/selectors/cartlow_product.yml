@@ -20,7 +20,7 @@ images:
     css: 'img.cz-image-zoom'
     type: Attribute
     attribute: src
-renewed:
+grade:
     css: 'span#conditions_current_value_front'
     xpath: null
     type: Text
