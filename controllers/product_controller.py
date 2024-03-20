@@ -1,7 +1,7 @@
 import csv
 from io import StringIO
 
-# from fastapi import UploadFile
+from fastapi import BackgroundTasks
 from fastapi.responses import StreamingResponse
 
 from config.db import connect_to_mongo
@@ -179,16 +179,17 @@ def scrape_products():
 
 
 # to upload product details from a file and save it to the database
-async def upload_products(file):
+async def upload_products(file, background_tasks: BackgroundTasks):
     if file.filename.endswith((".csv", ".xlsx", ".xls")):
         data = await file.read()
         file_data = get_file_data(data, file.filename)
         if not file_data:
             return ErrorResponseModel(400, "An error occurred.", "File is empty.")
 
-        scraped_data = scrape_all(file_data)
+        background_tasks.add_task(scrape_all, file_data)
+        # scraped_data = (file_data)
 
-        return ResponseModel("Products data uploaded successfully.", scraped_data)
+        return ResponseModel("Products data uploaded successfully.", None)
     else:
         return ErrorResponseModel(400, "An error occurred.", "File type not supported.")
 

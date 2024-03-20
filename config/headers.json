@@ -22,7 +22,7 @@
     "noon": [
         {
             "accept": "*/*",
-            "sccept-encoding": "gzip, deflate, br",
+            "accept-encoding": "gzip, deflate, br",
             "connection": "keep-alive",
             "referer": "https://www.noon.com/",
             "sec-fetch-mode": "no-cors",

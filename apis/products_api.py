@@ -1,4 +1,4 @@
-from fastapi import APIRouter, File, UploadFile
+from fastapi import APIRouter, BackgroundTasks, File, UploadFile
 from controllers.product_controller import (
     get_all_products,
     download_products,
@@ -31,8 +31,8 @@ async def scrape_products_route():
 
 # to upload product details from a file and save it to the database
 @router.post("/upload")
-async def upload_products_route(file: UploadFile):
-    return await upload_products(file)
+async def upload_products_route(file: UploadFile, BackgroundTasks: BackgroundTasks):
+    return await upload_products(file, BackgroundTasks)
 
 
 # to scrape product details live from the web and update the database
