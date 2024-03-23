@@ -53,7 +53,7 @@ def scrape_product(
 
 # Helper function to scrape data and store it in scraped_data
 def scrape_and_store(scraper_func, data_var, name, urls, scraped_data, key):
-    collection = connect_to_mongo()
+    db = connect_to_mongo()
 
     attempts = 3
     while attempts > 0:
@@ -61,8 +61,8 @@ def scrape_and_store(scraper_func, data_var, name, urls, scraped_data, key):
         if data:
             data_var = data
             scraped_data[key] = data_var
-            if collection.find_one({"product_id": scraped_data["product_id"]}):
-                collection.update_one(
+            if db["products"].find_one({"product_id": scraped_data["product_id"]}):
+                db["products"].update_one(
                     {"product_id": scraped_data["product_id"]},
                     {
                         "$set": {
@@ -74,7 +74,7 @@ def scrape_and_store(scraper_func, data_var, name, urls, scraped_data, key):
                     },
                 )
             else:
-                collection.insert_one(
+                db["products"].insert_one(
                     {
                         "product_id": scraped_data["product_id"],
                         "brand": scraped_data["brand"],
@@ -90,8 +90,8 @@ def scrape_and_store(scraper_func, data_var, name, urls, scraped_data, key):
         else:
             attempts -= 1
             if attempts == 0:
-                if collection.find_one({"product_id": scraped_data["product_id"]}):
-                    collection.update_one(
+                if db["products"].find_one({"product_id": scraped_data["product_id"]}):
+                    db["products"].update_one(
                         {"product_id": scraped_data["product_id"]},
                         {
                             "$set": {

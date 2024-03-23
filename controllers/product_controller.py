@@ -5,21 +5,19 @@ from fastapi import BackgroundTasks
 from fastapi.responses import StreamingResponse
 
 from config.db import connect_to_mongo
-from models.products import ResponseModel, ErrorResponseModel
+from models.response import ResponseModel, ErrorResponseModel
 from scraper.scrape import scrape_all
 from utils.file_utils import get_file_data
 from utils.product_utils import transform_products
 from utils.name_utils import transform_category_csv
 
-from pymongo import MongoClient
-
 
 # to get all products details from the database
 def get_all_products():
-    collection = connect_to_mongo()
+    db = connect_to_mongo()
 
     products = []
-    for prod in collection.find({}, {"_id": 0}):
+    for prod in db["products"].find({}, {"_id": 0}):
         products.append(prod)
 
     return ResponseModel("Products data found successfully.", products)
@@ -27,9 +25,9 @@ def get_all_products():
 
 # to download all products details from the database in csv
 def download_products():
-    collection = connect_to_mongo()
+    db = connect_to_mongo()
 
-    products = collection.find({})
+    products = db["products"].find({})
 
     filename = "products.csv"
     header = [
@@ -168,9 +166,9 @@ def download_products():
 
 # to update scrap data of existing products from the web
 def scrape_products():
-    collection = connect_to_mongo()
+    db = connect_to_mongo()
 
-    products = collection.find({})
+    products = db["products"].find({})
     products = transform_products(products)
 
     scraped_data = scrape_all(products)
@@ -187,7 +185,6 @@ async def upload_products(file, background_tasks: BackgroundTasks):
             return ErrorResponseModel(400, "An error occurred.", "File is empty.")
 
         background_tasks.add_task(scrape_all, file_data)
-        # scraped_data = (file_data)
 
         return ResponseModel("Products data uploaded successfully.", None)
     else:
@@ -196,9 +193,9 @@ async def upload_products(file, background_tasks: BackgroundTasks):
 
 # to scrape product details live from the web and update the database
 def get_live_product(product_id: int):
-    collection = connect_to_mongo()
+    db = connect_to_mongo()
 
-    product_data = collection.find_one({"product_id": product_id}, {"_id": 0})
+    product_data = db["products"].find_one({"product_id": product_id}, {"_id": 0})
     products = transform_products([product_data])
 
     scraped_data = scrape_all(products)
@@ -208,9 +205,9 @@ def get_live_product(product_id: int):
 
 # to get product details by product_id from database
 def get_product(product_id: int):
-    collection = connect_to_mongo()
+    db = connect_to_mongo()
 
-    product_data = collection.find_one({"product_id": product_id}, {"_id": 0})
+    product_data = db["products"].find_one({"product_id": product_id}, {"_id": 0})
     if not product_data:
         return ErrorResponseModel(404, "An error occurred.", "Product not found.")
 
