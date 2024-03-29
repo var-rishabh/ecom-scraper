@@ -79,6 +79,7 @@ def scrape_and_store(scraper_func, data_var, name, urls, scraped_data, key):
                         "product_id": scraped_data["product_id"],
                         "brand": scraped_data["brand"],
                         "name": scraped_data["name"],
+                        "model": scraped_data["model"],
                         "category": scraped_data["category"],
                         "amazon": scraped_data["amazon"],
                         "cartlow": scraped_data["cartlow"],

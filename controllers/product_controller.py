@@ -211,4 +211,132 @@ def get_product(product_id: int):
     if not product_data:
         return ErrorResponseModel(404, "An error occurred.", "Product not found.")
 
-    return ResponseModel("Product data retrieved successfully.", product_data)
+    filename = f'{product_data["product_id"]}.csv'
+    header = [
+        "product_id",
+        "brand",
+        "name",
+        "category",
+        "amazon_price",
+        "cartlow_price",
+        "noon_price",
+        "amazon_seller",
+        "cartlow_seller",
+        "noon_seller",
+        "amazon_rating",
+        "cartlow_rating",
+        "noon_rating",
+        "amazon_number_of_reviews",
+        "cartlow_number_of_reviews",
+        "noon_number_of_reviews",
+        "amazon_url",
+        "cartlow_url",
+        "noon_url",
+        "amazon_grade",
+        "cartlow_grade",
+        "noon_grade"
+    ]
+
+    data = {}
+    data["product_id"] = product_data["product_id"]
+    data["brand"] = product_data["brand"]
+    data["name"] = product_data["name"]
+    data["category"] = transform_category_csv(product_data["category"])
+    if not product_data["amazon"]:
+        product_data["amazon"] = [{}]
+    if not product_data["cartlow"]:
+        product_data["cartlow"] = [{}]
+    if not product_data["noon"]:
+        product_data["noon"] = [{}]
+
+    for amazon_data in product_data["amazon"]:
+        data["amazon_price"] = (
+            amazon_data["discount_price"]
+            if "discount_price" in amazon_data
+            else "NA"
+        )
+        data["amazon_seller"] = (
+            amazon_data["seller"] if "seller" in amazon_data else "NA"
+        )
+        data["amazon_rating"] = (
+            amazon_data["rating"] if "rating" in amazon_data else "NA"
+        )
+        data["amazon_number_of_reviews"] = (
+            amazon_data["number_of_reviews"]
+            if "number_of_reviews" in amazon_data
+            else "NA"
+        )
+        data["amazon_grade"] = amazon_data["grade"] if "grade" in amazon_data else "NA"
+        data["amazon_url"] = amazon_data["url"] if "url" in amazon_data else "NA"
+        break
+    for cartlow_data in product_data["cartlow"]:
+        data["cartlow_price"] = (
+            cartlow_data["discount_price"]
+            if "discount_price" in cartlow_data
+            else "NA"
+        )
+        data["cartlow_seller"] = (
+            cartlow_data["seller"] if "seller" in cartlow_data else "NA"
+        )
+        data["cartlow_rating"] = (
+            cartlow_data["rating"] if "rating" in cartlow_data else "NA"
+        )
+        data["cartlow_number_of_reviews"] = (
+            cartlow_data["number_of_reviews"]
+            if "number_of_reviews" in cartlow_data
+            else "NA"
+        )
+        data["cartlow_grade"] = cartlow_data["grade"] if "grade" in cartlow_data else "NA"
+        data["cartlow_url"] = cartlow_data["url"] if "url" in cartlow_data else "NA"
+        break
+    for noon_data in product_data["noon"]:
+        data["noon_price"] = (
+            noon_data["discount_price"] if "discount_price" in noon_data else "NA"
+        )
+        data["noon_seller"] = noon_data["seller"] if "seller" in noon_data else "NA"
+        data["noon_rating"] = noon_data["rating"] if "rating" in noon_data else "NA"
+        data["noon_number_of_reviews"] = (
+            noon_data["number_of_reviews"]
+            if "number_of_reviews" in noon_data
+            else "NA"
+        )
+        data["noon_grade"] = noon_data["grade"] if "grade" in noon_data else "NA"
+        data["noon_url"] = noon_data["url"] if "url" in noon_data else "NA"
+        break
+
+    csv_data = StringIO()
+    csv_writer = csv.writer(csv_data)
+    csv_writer.writerow(header)
+    csv_writer.writerow(
+        [
+            data["product_id"],
+            data["brand"],
+            data["name"],
+            data["category"],
+            data["amazon_price"],
+            data["cartlow_price"],
+            data["noon_price"],
+            data["amazon_seller"],
+            data["cartlow_seller"],
+            data["noon_seller"],
+            data["amazon_rating"],
+            data["cartlow_rating"],
+            data["noon_rating"],
+            data["amazon_number_of_reviews"],
+            data["cartlow_number_of_reviews"],
+            data["noon_number_of_reviews"],
+            data["amazon_url"],
+            data["cartlow_url"],
+            data["noon_url"],
+            data["amazon_grade"],
+            data["cartlow_grade"],
+            data["noon_grade"]
+        ]
+    )
+
+    csv_data.seek(0)
+    return StreamingResponse(
+        iter([csv_data.getvalue()]),
+        media_type="text/csv",
+        headers={"Content-Disposition": f"attachment;filename={filename}"},
+    )

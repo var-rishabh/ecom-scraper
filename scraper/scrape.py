@@ -22,7 +22,7 @@ def scrape_all(products):
     threads = []
 
     for name in products:
-        amazon_url, noon_url = raw_search_url(name["search_name"])
+        amazon_url, noon_url = raw_search_url(name["search_name"], name["model"])
 
         # finding product search urls
         amazon_products_urls = amazon_search_url(amazon_url)
@@ -33,6 +33,7 @@ def scrape_all(products):
             "product_id": name["product_id"],
             "brand": name["brand"],
             "name": name["name"],
+            "model": name["model"],
             "search_name": name["search_name"],
             "category": name["category"],
             "amazon": name["amazon"] if "amazon" in name else None,

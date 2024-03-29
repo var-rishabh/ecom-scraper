@@ -14,10 +14,13 @@ def get_file_data(file_data, file_name):
 
     products = []
     for index, row in data.iterrows():
+        if type(row["brand_name"]) == float and pd.isnull(row["brand_name"]):
+            row["brand_name"] = ""
         product_info = {
             "product_id": row["product_id"],
             "brand": row["brand_name"],
             "name": row["product_name"],
+            "model": row["model_number"],
             "search_name": transform_name(f'{row["brand_name"]} {row["product_name"]}'),
             "category": transform_category(row["category"]),
         }

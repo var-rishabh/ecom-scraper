@@ -24,13 +24,15 @@ formatters = Formatter.get_all()
 
 
 # generating search url for product
-def raw_search_url(product_name):
+def raw_search_url(product_name, model):
     amazon_url = {
         "name": product_name,
+        "model": model,
         "link": f'https://www.amazon.ae/s?k={"+".join(product_name.split())}',
     }
     noon_url = {
         "name": product_name,
+        "model": model,
         "link": f"https://www.noon.com/_svc/catalog/api/v3/u/search/?limit=50&originalQuery={transform_noon_url_name(product_name)}&q={transform_noon_url_name(product_name)}&sort%5Bby%5D=popularity&searchDebug=false&sort%5Bdir%5D=desc",
     }
     return amazon_url, noon_url
@@ -62,7 +64,7 @@ def amazon_search_url(amazon_url):
                     )
                     keywords = amazon_url["name"].lower().split()
                     matched = all(keyword in product_name for keyword in keywords)
-                    if matched:
+                    if matched or amazon_url["model"].lower() in product_name:
                         urls.append(product["url"])
                     if len(urls) == 5:
                         break

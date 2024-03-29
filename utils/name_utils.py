@@ -28,6 +28,8 @@ def transform_noon_url_name(name):
 
 # to format category name
 def transform_category(category):
+    if type(category) != str:
+        return []
     return [part.strip() for part in category.split("/")]
 
 
