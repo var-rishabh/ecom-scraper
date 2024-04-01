@@ -54,7 +54,7 @@ def amazon_search_url(amazon_url):
             header = random.choice(headers.get("amazon", []))
 
             response = requests.get(
-                amazon_url["link"], headers=header, proxies={"http": proxy}, timeout=10
+                amazon_url["link"], headers=header, proxies={"http": proxy}, timeout=20
             )
             if response.status_code == 200:
                 data = url_extractor.extract(response.text)
@@ -64,7 +64,7 @@ def amazon_search_url(amazon_url):
                     )
                     keywords = amazon_url["name"].lower().split()
                     matched = all(keyword in product_name for keyword in keywords)
-                    if matched or amazon_url["model"].lower() in product_name:
+                    if matched or (type(amazon_url["model"]) == str and (amazon_url["model"].lower() in product_name)):
                         urls.append(product["url"])
                     if len(urls) == 5:
                         break
@@ -74,7 +74,7 @@ def amazon_search_url(amazon_url):
 
             failed_tries += 1
             print(
-                f"🟧 Failed to fetch {amazon_url['link']}, {response.url}. Trying again",
+                f"🟧 Failed to fetch {amazon_url['link']}. Trying again",
                 flush=True,
             )
 
@@ -150,7 +150,7 @@ def noon_search_url(noon_url):
             proxy = f"http://{random.choice(proxies_list)}"
             header = random.choice(headers.get("noon", []))
             response = requests.get(
-                noon_url["link"], headers=header, proxies={"http": proxy}, timeout=10
+                noon_url["link"], headers=header, proxies={"http": proxy}, timeout=20
             )
 
             data = response.json()
@@ -161,7 +161,7 @@ def noon_search_url(noon_url):
                     )
                     keywords = noon_url["name"].lower().split()
                     matched = all(keyword in product_Title for keyword in keywords)
-                    if matched:
+                    if matched or (type(noon_url["model"]) == str and (noon_url["model"].lower() in product_Title)):
                         urls.append(
                             "https://www.noon.com/"
                             + product["url"]

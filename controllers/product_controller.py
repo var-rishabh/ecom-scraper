@@ -27,7 +27,7 @@ def get_all_products():
 def download_products():
     db = connect_to_mongo()
 
-    products = db["products"].find({})
+    products = db["products"].find({}).sort({"product_id": 1})
 
     filename = "products.csv"
     header = [
@@ -35,6 +35,7 @@ def download_products():
         "brand",
         "name",
         "category",
+        "amazon_asin_number",
         "amazon_price",
         "cartlow_price",
         "noon_price",
@@ -52,7 +53,7 @@ def download_products():
         "noon_url",
         "amazon_grade",
         "cartlow_grade",
-        "noon_grade"
+        "noon_grade",
     ]
 
     all_products = []
@@ -75,6 +76,9 @@ def download_products():
                 if "discount_price" in amazon_data
                 else "NA"
             )
+            data["amazon_asin_number"] = (
+                amazon_data["asin_number"] if "asin_number" in amazon_data else "NA"
+            )
             data["amazon_seller"] = (
                 amazon_data["seller"] if "seller" in amazon_data else "NA"
             )
@@ -86,7 +90,9 @@ def download_products():
                 if "number_of_reviews" in amazon_data
                 else "NA"
             )
-            data["amazon_grade"] = amazon_data["grade"] if "grade" in amazon_data else "NA"
+            data["amazon_grade"] = (
+                amazon_data["grade"] if "grade" in amazon_data else "NA"
+            )
             data["amazon_url"] = amazon_data["url"] if "url" in amazon_data else "NA"
             break
         for cartlow_data in product["cartlow"]:
@@ -106,7 +112,9 @@ def download_products():
                 if "number_of_reviews" in cartlow_data
                 else "NA"
             )
-            data["cartlow_grade"] = cartlow_data["grade"] if "grade" in cartlow_data else "NA"
+            data["cartlow_grade"] = (
+                cartlow_data["grade"] if "grade" in cartlow_data else "NA"
+            )
             data["cartlow_url"] = cartlow_data["url"] if "url" in cartlow_data else "NA"
             break
         for noon_data in product["noon"]:
@@ -135,6 +143,7 @@ def download_products():
                 product["brand"],
                 product["name"],
                 product["category"],
+                product["amazon_asin_number"],
                 product["amazon_price"],
                 product["cartlow_price"],
                 product["noon_price"],
@@ -152,7 +161,7 @@ def download_products():
                 product["noon_url"],
                 product["amazon_grade"],
                 product["cartlow_grade"],
-                product["noon_grade"]
+                product["noon_grade"],
             ]
         )
 
@@ -217,6 +226,7 @@ def get_product(product_id: int):
         "brand",
         "name",
         "category",
+        "amazon_asin_number",
         "amazon_price",
         "cartlow_price",
         "noon_price",
@@ -234,7 +244,7 @@ def get_product(product_id: int):
         "noon_url",
         "amazon_grade",
         "cartlow_grade",
-        "noon_grade"
+        "noon_grade",
     ]
 
     data = {}
@@ -251,9 +261,10 @@ def get_product(product_id: int):
 
     for amazon_data in product_data["amazon"]:
         data["amazon_price"] = (
-            amazon_data["discount_price"]
-            if "discount_price" in amazon_data
-            else "NA"
+            amazon_data["discount_price"] if "discount_price" in amazon_data else "NA"
+        )
+        data["amazon_asin_number"] = (
+            amazon_data["asin_number"] if "asin_number" in amazon_data else "NA"
         )
         data["amazon_seller"] = (
             amazon_data["seller"] if "seller" in amazon_data else "NA"
@@ -271,9 +282,7 @@ def get_product(product_id: int):
         break
     for cartlow_data in product_data["cartlow"]:
         data["cartlow_price"] = (
-            cartlow_data["discount_price"]
-            if "discount_price" in cartlow_data
-            else "NA"
+            cartlow_data["discount_price"] if "discount_price" in cartlow_data else "NA"
         )
         data["cartlow_seller"] = (
             cartlow_data["seller"] if "seller" in cartlow_data else "NA"
@@ -286,7 +295,9 @@ def get_product(product_id: int):
             if "number_of_reviews" in cartlow_data
             else "NA"
         )
-        data["cartlow_grade"] = cartlow_data["grade"] if "grade" in cartlow_data else "NA"
+        data["cartlow_grade"] = (
+            cartlow_data["grade"] if "grade" in cartlow_data else "NA"
+        )
         data["cartlow_url"] = cartlow_data["url"] if "url" in cartlow_data else "NA"
         break
     for noon_data in product_data["noon"]:
@@ -296,9 +307,7 @@ def get_product(product_id: int):
         data["noon_seller"] = noon_data["seller"] if "seller" in noon_data else "NA"
         data["noon_rating"] = noon_data["rating"] if "rating" in noon_data else "NA"
         data["noon_number_of_reviews"] = (
-            noon_data["number_of_reviews"]
-            if "number_of_reviews" in noon_data
-            else "NA"
+            noon_data["number_of_reviews"] if "number_of_reviews" in noon_data else "NA"
         )
         data["noon_grade"] = noon_data["grade"] if "grade" in noon_data else "NA"
         data["noon_url"] = noon_data["url"] if "url" in noon_data else "NA"
@@ -313,6 +322,7 @@ def get_product(product_id: int):
             data["brand"],
             data["name"],
             data["category"],
+            data["amazon_asin_number"],
             data["amazon_price"],
             data["cartlow_price"],
             data["noon_price"],
@@ -330,7 +340,7 @@ def get_product(product_id: int):
             data["noon_url"],
             data["amazon_grade"],
             data["cartlow_grade"],
-            data["noon_grade"]
+            data["noon_grade"],
         ]
     )
 

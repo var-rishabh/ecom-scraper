@@ -30,7 +30,7 @@ def get_popsy_products(title):
 
     proxy = f"http://{random.choice(proxies_list)}"
 
-    response = requests.get(url, proxies={"http": proxy}, timeout=10)
+    response = requests.get(url, proxies={"http": proxy}, timeout=20)
     if response.status_code == 200:
         products = response.json()
         return products["results"]
@@ -45,7 +45,7 @@ def get_popsy_product_variants(popsy_product_model):
     
     proxy = f"http://{random.choice(proxies_list)}"
     
-    response = requests.get(url, proxies={"http": proxy}, timeout=10)
+    response = requests.get(url, proxies={"http": proxy}, timeout=20)
     if response.status_code == 200:
         variants = response.json()
         return variants["model"][0]

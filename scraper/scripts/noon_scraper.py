@@ -63,12 +63,12 @@ def scrape_noon(product_name, noon_products_urls):
                 header = random.choice(headers.get("noon", []))
 
                 response = requests.get(
-                    url, headers=header, proxies={"http": proxy}, timeout=10
+                    url, headers=header, proxies={"http": proxy}, timeout=20
                 )
                 if response.status_code == 200:
                     product_data = product_selector.extract(response.text)
                     if product_data and product_data["name"]:
-                        if product_data["grade"]:
+                        if product_data["grade"] and len(product_data["grade"]) == 2:
                             product_data["grade"] = product_data["grade"][1]["renewed_grade"]
                         product_data["url"] = url
                         delete_file(product_name, "noon", f"noon{success_url_num}.html")
@@ -80,7 +80,7 @@ def scrape_noon(product_name, noon_products_urls):
                         f"🟡 Failed to fetch {product_name} from noon, {response.url}"
                     )
             except Exception as e:
-                print(f"🟡 Error fetching data from {product_name}: {e}")
+                print(f"🟡 Error fetching data from {product_name} {url}: {e}")
                 failed_tries += 1
 
             failed_tries += 1

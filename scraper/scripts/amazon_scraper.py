@@ -56,13 +56,14 @@ def scrape_amazon(product_name, amazon_products_urls):
 
                 header = random.choice(headers.get("amazon", []))
 
-                response = requests.get(url, headers=header, proxies={"http": proxy}, timeout=10)
+                response = requests.get(url, headers=header, proxies={"http": proxy}, timeout=20)
                 if response.status_code == 200:              
                     product_data = product_selector.extract(response.text)
                     if not product_data["seller"]:
                         product_data["seller"] = "Amazon.ae"
                     if product_data and product_data["name"]:
                         product_data["url"] = url
+                        product_data["asin_number"] = url.split("/dp/")[1].split("/")[0]
                         delete_file(product_name, "amazon", f"amazon{success_url_num}.html")
                         save_data_to_html_file(product_name, "amazon", f"amazon{success_url_num}", response.text)
                         products_data.append(product_data)
@@ -70,7 +71,7 @@ def scrape_amazon(product_name, amazon_products_urls):
                 else:
                     print(f"🟠 Failed to fetch {product_name} from Amazon, {response.url}")
             except Exception as e:
-                print(f"🟠 Error fetching data from {product_name}: {e}")
+                print(f"🟠 Error fetching data from {product_name} {url}: {e}")
             failed_tries += 1
 
     return products_data

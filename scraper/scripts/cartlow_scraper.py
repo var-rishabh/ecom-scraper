@@ -43,7 +43,7 @@ def scrape_cartlow(product_name, cartlow_products_urls):
                 header = random.choice(headers.get("cartlow", []))
 
                 response = requests.get(
-                    url, headers=header, proxies={"http": proxy}, timeout=10
+                    url, headers=header, proxies={"http": proxy}, timeout=20
                 )
                 if response.status_code == 200:
                     product_data = product_selector.extract(response.text)
