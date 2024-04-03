@@ -16,6 +16,8 @@ def get_file_data(file_data, file_name):
     for index, row in data.iterrows():
         if type(row["brand_name"]) == float and pd.isnull(row["brand_name"]):
             row["brand_name"] = ""
+        if type(row["model_number"]) == float and pd.isnull(row["model_number"]):
+            row["model_number"] = ""
         product_info = {
             "product_id": row["product_id"],
             "brand": row["brand_name"],

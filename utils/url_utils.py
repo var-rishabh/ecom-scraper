@@ -64,7 +64,7 @@ def amazon_search_url(amazon_url):
                     )
                     keywords = amazon_url["name"].lower().split()
                     matched = all(keyword in product_name for keyword in keywords)
-                    if matched or (type(amazon_url["model"]) == str and (amazon_url["model"].lower() in product_name)):
+                    if matched or (amazon_url["model"] != "" and (amazon_url["model"].lower() in product_name)):
                         urls.append(product["url"])
                     if len(urls) == 5:
                         break
@@ -161,7 +161,7 @@ def noon_search_url(noon_url):
                     )
                     keywords = noon_url["name"].lower().split()
                     matched = all(keyword in product_Title for keyword in keywords)
-                    if matched or (type(noon_url["model"]) == str and (noon_url["model"].lower() in product_Title)):
+                    if matched or (noon_url["model"] != "" and (noon_url["model"].lower() in product_Title)):
                         urls.append(
                             "https://www.noon.com/"
                             + product["url"]

@@ -195,7 +195,7 @@ async def upload_products(file, background_tasks: BackgroundTasks):
 
         background_tasks.add_task(scrape_all, file_data)
 
-        return ResponseModel("Products data uploaded successfully.", None)
+        return ResponseModel("Products data scraping in running background. It will take time.", None)
     else:
         return ErrorResponseModel(400, "An error occurred.", "File type not supported.")
 
