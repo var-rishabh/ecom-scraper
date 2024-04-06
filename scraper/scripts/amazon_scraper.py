@@ -3,7 +3,7 @@ import random
 import requests
 from selectorlib import Extractor, Formatter
 
-# saving the product details to a html file
+from config.logger import logger
 from utils.file_utils import delete_file, save_data_to_html_file
 
 # getting all proxies list
@@ -49,29 +49,42 @@ def scrape_amazon(product_name, amazon_products_urls):
     for url in amazon_products_urls:
         failed_tries = 0
         success_url_num += 1
-        
+
         while failed_tries < MAX_TRIES:
             try:
                 proxy = f"http://{random.choice(proxies_list)}"
 
                 header = random.choice(headers.get("amazon", []))
 
-                response = requests.get(url, headers=header, proxies={"http": proxy}, timeout=20)
-                if response.status_code == 200:              
+                response = requests.get(
+                    url, headers=header, proxies={"http": proxy}, timeout=20
+                )
+                if response.status_code == 200:
                     product_data = product_selector.extract(response.text)
                     if not product_data["seller"]:
                         product_data["seller"] = "Amazon.ae"
                     if product_data and product_data["name"]:
                         product_data["url"] = url
                         product_data["asin_number"] = url.split("/dp/")[1].split("/")[0]
-                        delete_file(product_name, "amazon", f"amazon{success_url_num}.html")
-                        save_data_to_html_file(product_name, "amazon", f"amazon{success_url_num}", response.text)
+                        delete_file(
+                            product_name, "amazon", f"amazon{success_url_num}.html"
+                        )
+                        save_data_to_html_file(
+                            product_name,
+                            "amazon",
+                            f"amazon{success_url_num}",
+                            response.text,
+                        )
                         products_data.append(product_data)
                         break
                 else:
-                    print(f"🟠 Failed to fetch {product_name} from Amazon, {response.url}")
+                    logger.warning(
+                        f"🟠 Failed to fetch {product_name} from Amazon, {response.url}"
+                    )
             except Exception as e:
-                print(f"🟠 Error fetching data from {product_name} {url}: {e}")
-            failed_tries += 1
+                logger.error(
+                    f"🟠 Error fetching data from {product_name} {url}", exc_info=True
+                )
 
+            failed_tries += 1
     return products_data

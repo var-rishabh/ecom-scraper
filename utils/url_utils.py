@@ -2,6 +2,8 @@ import json
 import random
 import requests
 from selectorlib import Extractor, Formatter
+
+from config.logger import logger
 from utils.name_utils import transform_noon_url_name
 
 proxies_list = open("config/proxies_list.txt", "r").read().strip().split("\n")
@@ -64,7 +66,10 @@ def amazon_search_url(amazon_url):
                     )
                     keywords = amazon_url["name"].lower().split()
                     matched = all(keyword in product_name for keyword in keywords)
-                    if matched or (amazon_url["model"] != "" and (amazon_url["model"].lower() in product_name)):
+                    if matched or (
+                        amazon_url["model"] != ""
+                        and (amazon_url["model"].lower() in product_name)
+                    ):
                         urls.append(product["url"])
                     if len(urls) == 5:
                         break
@@ -73,14 +78,13 @@ def amazon_search_url(amazon_url):
                 return urls
 
             failed_tries += 1
-            print(
-                f"🟧 Failed to fetch {amazon_url['link']}. Trying again",
-                flush=True,
-            )
+            logger.warning(f"Failed to fetch {amazon_url['link']}. Trying again")
 
         except Exception as e:
             failed_tries += 1
-            print(f'🟧 Error fetching data from {amazon_url["link"]}: {e}')
+            logger.error(
+                f"Error fetching data from {amazon_url['link']}", exc_info=True
+            )
 
 
 # finding cartlow product search urls with product name
@@ -116,7 +120,9 @@ def cartlow_search_url(product_name):
             )
 
             data = response.json()
-            if response.status_code == 200 and (data["success"] == True and len(data["results"]) > 0):
+            if response.status_code == 200 and (
+                data["success"] == True and len(data["results"]) > 0
+            ):
                 for product in data["results"]:
                     product_Title = product["title"].lower()
                     keywords = product_name.lower().split()
@@ -129,15 +135,14 @@ def cartlow_search_url(product_name):
                 failed_tries = 0
                 return urls
 
-            print(
-                f"🟪 Failed to fetch {product_name} from Cartlow. Trying again",
-                flush=True,
-            )
+            logger.warning(f"Failed to fetch {product_name} from Cartlow. Trying again")
             failed_tries += 1
 
         except Exception as e:
             failed_tries += 1
-            print(f"🟪 Error fetching data for {product_name} from Cartlow. {e}")
+            logger.error(
+                f"Error fetching data for {product_name} from Cartlow.", exc_info=True
+            )
 
 
 # finding noon product search urls with product list url
@@ -161,7 +166,10 @@ def noon_search_url(noon_url):
                     )
                     keywords = noon_url["name"].lower().split()
                     matched = all(keyword in product_Title for keyword in keywords)
-                    if matched or (noon_url["model"] != "" and (noon_url["model"].lower() in product_Title)):
+                    if matched or (
+                        noon_url["model"] != ""
+                        and (noon_url["model"].lower() in product_Title)
+                    ):
                         urls.append(
                             "https://www.noon.com/"
                             + product["url"]
@@ -176,12 +184,13 @@ def noon_search_url(noon_url):
                 failed_tries = 0
                 return urls
 
-            print(
-                f"🟨 Failed to fetch {noon_url['name']} from Noon. Trying again",
-                flush=True,
+            logger.warning(
+                f"Failed to fetch {noon_url['name']} from Noon. Trying again"
             )
             failed_tries += 1
 
         except Exception as e:
             failed_tries += 1
-            print(f"🟨 Error fetching data for {noon_url['name']} from Noon. {e}")
+            logger.error(
+                f"Error fetching data for {noon_url['name']} from Noon.", exc_info=True
+            )

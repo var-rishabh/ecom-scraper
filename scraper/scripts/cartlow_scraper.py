@@ -3,7 +3,7 @@ import random
 import requests
 from selectorlib import Extractor, Formatter
 
-# saving the product details to a html file
+from config.logger import logger
 from utils.file_utils import delete_file, save_data_to_html_file
 
 # getting all proxies list
@@ -49,16 +49,26 @@ def scrape_cartlow(product_name, cartlow_products_urls):
                     product_data = product_selector.extract(response.text)
                     if product_data and product_data["name"]:
                         product_data["url"] = url
-                        delete_file(product_name, "cartlow", f"cartlow{success_url_num}.html")
-                        save_data_to_html_file(product_name, "cartlow", f"cartlow{success_url_num}", response.text)
+                        delete_file(
+                            product_name, "cartlow", f"cartlow{success_url_num}.html"
+                        )
+                        save_data_to_html_file(
+                            product_name,
+                            "cartlow",
+                            f"cartlow{success_url_num}",
+                            response.text,
+                        )
                         products_data.append(product_data)
                         break
                 else:
-                    print(
+                    logger.warning(
                         f"🟣 Failed to fetch {product_name} from cartlow, {response.url}"
                     )
             except Exception as e:
-                print(f"🟣 Error fetching data from {product_name}: {e}")
+                logger.error(
+                    f"🟣 Error fetching data from {product_name}", exc_info=True
+                )
+
             failed_tries += 1
 
     return products_data
