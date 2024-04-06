@@ -1,0 +1,21 @@
+products:
+  css: "div.product.col_item.two_column_mobile.type-product.woo_mart"
+  xpath: null
+  multiple: true
+  type: Text
+  children:
+    name:
+      css: "h2.text-clamp"
+      xpath: null
+      type: Text
+    url:
+      css: "h2.text-clamp a"
+      xpath: null
+      type: Attribute
+      attribute: href
+nextPageNumber:
+  css: "a.next.page-numbers"
+  xpath: null
+  type: Attribute
+  attribute: href
+  format: NextPageNumberFormatter

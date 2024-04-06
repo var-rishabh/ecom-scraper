@@ -1,13 +1,16 @@
 from fastapi import FastAPI
+
 from apis.products_api import product_router
 from apis.popsy_api import popsy_router
+from apis.revent_api import revent_router
 
 app = FastAPI()
 
 
-# include routes from products and popsy
+# routes
 app.include_router(product_router, tags=["product"], prefix="/product")
 app.include_router(popsy_router, tags=["popsy"], prefix="/popsy")
+app.include_router(revent_router, tags=["revent"], prefix="/revent")
 
 # root route
 @app.get("/", tags=["root"])

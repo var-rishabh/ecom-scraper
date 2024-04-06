@@ -11,7 +11,7 @@ def setup_logger():
     logger.setLevel(logging.DEBUG)
 
     log_file = os.path.join(logs_folder, f"{datetime.now().strftime('%Y-%m-%d')}.log")
-    file_handler = logging.FileHandler(log_file)
+    file_handler = logging.FileHandler(log_file, encoding='utf-8')
     file_handler.setLevel(logging.DEBUG)
 
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
