@@ -9,7 +9,7 @@ It allows you to extract product information such as title, price, rating, and d
 ## Setup
 
 ```
-Step 1: Clone this repository and move it to the directory
+Step 1: Clone this repository and move to the directory
 
 $ git clone https://github.com/R3-Factory/scrapper/.git
 
@@ -27,4 +27,5 @@ Step 3: Go to port localhost:8000/docs
 ```
 
 > Note 1: You can find the HTML file of all the product pages fetched from the web in the `data/HTMl` folder to verify the scraped information.
+
 > Note 2: You can check the log file in `data/logs`
