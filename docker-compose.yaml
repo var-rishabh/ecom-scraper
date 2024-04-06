@@ -2,7 +2,6 @@ version: "3.8"
 
 services:
   web:
-    # image: radioactive1109/r3-scraper:v1
     container_name: web-container
     build:
       context: .
@@ -10,9 +9,12 @@ services:
       args:
         requirements_file: requirements.txt
     ports:
-      - "80:8000"
+      - "8000:8000"
     depends_on:
       - mongodb
+    volumes:
+      - .:/app
+      - data:/app/data
     restart: always
 
   mongodb:
@@ -25,5 +27,7 @@ services:
     restart: always
 
 volumes:
+  data:
+    driver: local
   mongo_data:
     driver: local

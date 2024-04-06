@@ -6,7 +6,7 @@ COPY . .
 
 COPY ./requirements.txt /app/requirements.txt
 
-RUN pip3 install --upgrade pip && pip3 install -r /app/requirements.txt
+RUN pip install -r /app/requirements.txt
 
 EXPOSE 8000
 

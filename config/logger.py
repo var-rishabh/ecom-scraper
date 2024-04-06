@@ -1,6 +1,5 @@
 import os
 import logging
-from logging.handlers import TimedRotatingFileHandler
 from datetime import datetime
 
 def setup_logger():
