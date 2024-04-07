@@ -1,0 +1,21 @@
+urls:
+  css: "a.card-title-ellipsis"
+  xpath: null
+  multiple: true
+  type: Text
+  children:
+    name:
+      css: "h2.text"
+      xpath: null
+      type: Text
+    url:
+      css: "a.card-title-ellipsis"
+      xpath: null
+      type: Attribute
+      attribute: href
+nextPageNumber:
+  css: 'a[data-load-more="Show More"]'
+  xpath: null
+  type: Attribute
+  attribute: href
+  format: NextPageNumberFormatter

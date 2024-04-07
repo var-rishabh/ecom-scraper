@@ -1,0 +1,10 @@
+product_info:
+  css: 'script[type="application/ld+json"]'
+  xpath: null
+  type: Text
+  multiple: True
+  children:
+    info:
+      css: 'script[type="application/ld+json"]'
+      xpath: null
+      type: Text

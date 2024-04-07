@@ -1,0 +1,15 @@
+category_urls:
+  css: "li.menu-lv-item.no-megamenu.dropdown"
+  xpath: null
+  multiple: true
+  type: Text
+  children:
+    name:
+      css: "span.text"
+      xpath: null
+      type: Text
+    url:
+      css: "a.menu_mobile_link"
+      xpath: null
+      type: Attribute
+      attribute: href

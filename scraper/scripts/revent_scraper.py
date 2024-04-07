@@ -38,7 +38,7 @@ def get_revent_products_links():
                 proxy = f"http://{random.choice(proxies_list)}"
 
                 url_selector = Extractor.from_yaml_file(
-                    "scraper/selectors/revent_url.yml", formatters=formatters
+                    "scraper/selectors/revent/revent_url.yml", formatters=formatters
                 )
 
                 response = requests.get(url, proxies={"http": proxy}, timeout=20)
@@ -75,7 +75,7 @@ def scrape_revent_variants(product):
         url = product["url"]
 
         url_selector = Extractor.from_yaml_file(
-            "scraper/selectors/revent_product.yml", formatters=formatters
+            "scraper/selectors/revent/revent_product.yml", formatters=formatters
         )
         while failed_tries < MAX_TRIES:
             proxy = f"http://{random.choice(proxies_list)}"
@@ -99,8 +99,16 @@ def scrape_revent_variants(product):
                         .replace("in UAE", "")
                         .strip()
                     )
-                    product["brand"] = product_group["brand"]["name"] if product_group.get("brand") else "NA"
-                    product["category"] = product_group["category"] if product_group.get("category") else "NA"
+                    product["brand"] = (
+                        product_group["brand"]["name"]
+                        if product_group.get("brand")
+                        else "NA"
+                    )
+                    product["category"] = (
+                        product_group["category"]
+                        if product_group.get("category")
+                        else "NA"
+                    )
                     product["product_id"] = product_group["productGroupID"]
                     product["properties"] = []
                     if len(product_group["additionalProperty"]) > 0:
@@ -116,7 +124,11 @@ def scrape_revent_variants(product):
                                 {
                                     "name": variant["name"],
                                     "price": variant["offers"]["price"],
-                                    "image": variant["image"] if variant.get("image") else "NA",
+                                    "image": (
+                                        variant["image"]
+                                        if variant.get("image")
+                                        else "NA"
+                                    ),
                                     "color": (
                                         variant["color"]
                                         if variant.get("color")
@@ -127,7 +139,11 @@ def scrape_revent_variants(product):
                                         if variant.get("storage")
                                         else "NA"
                                     ),
-                                    "condition": variant["condition"] if variant.get("condition") else "NA",
+                                    "condition": (
+                                        variant["condition"]
+                                        if variant.get("condition")
+                                        else "NA"
+                                    ),
                                     "url": variant["offers"]["url"],
                                 }
                             )

@@ -46,7 +46,7 @@ def amazon_search_url(amazon_url):
     failed_tries = 0
 
     url_extractor = Extractor.from_yaml_file(
-        "scraper/selectors/amazon_url.yml", formatters=formatters
+        "scraper/selectors/amazon/amazon_url.yml", formatters=formatters
     )
 
     while failed_tries < MAX_TRIES:
