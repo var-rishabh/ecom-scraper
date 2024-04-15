@@ -37,5 +37,23 @@
             "connection": "keep-alive",
             "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36"
         }
+    ],
+    "revibe": [
+        {
+            "origin": "https://tradein.revibe.me",
+            "x-api-key": "1BE41EC4B08242AD4DC7D94E9:2F247E7AB2A594D1EF7ED868CC1B3F43D168FECFDBF8CEC6B63A0AEFD8F2"
+        }
+    ],
+    "revent": [
+        {
+            "origin": "https://revent.northladder.net",
+            "x-api-key": "7B24D4DA198A66F35D22A7A46:3BB7E742D1D855A1EFEB59349C88AFABD412B202997CEF00F73A1A9F9D8F"
+        }
+    ],
+    "northladder": [
+        {
+            "origin": "https://www.northladder.com",
+            "x-api-key": "7134355B99D1348212E844EBF:DA9571E7ACAF6B6795C50B8C7DED0E2631A6E38ADA925C89099175477196"
+        }
     ]
 }
