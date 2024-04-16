@@ -11,7 +11,7 @@ It allows you to extract product information such as title, price, rating, and d
 ```
 Step 1: Clone this repository and move to the directory
 
-$ git clone https://github.com/R3-Factory/scrapper/.git
+$ git clone https://github.com/var-rishabh/ecom-scrapper/.git
 
 $ cd scrapper
 ```
