@@ -1,26 +1,48 @@
 name:
-    css: 'h1#var_name'
+    css: "h1#var_name"
     xpath: null
     type: Text
 discount_price:
-    css: 'span#var_price'
+    css: "span#var_price"
     xpath: null
     type: Text
-    format: PriceFormatter
 list_price:
-    css: 'span#var_market_price'
+    css: "span#var_market_price"
     xpath: null
     type: Text
-    format: PriceFormatter
 seller:
-    css: 'span#shop_name'
+    css: "span#shop_name"
     xpath: null
     type: Text
 images:
-    css: 'img.cz-image-zoom'
+    css: "img.cz-image-zoom"
     type: Attribute
     attribute: src
 grade:
-    css: 'span#conditions_current_value_front'
+    css: "span#conditions_current_value_front"
     xpath: null
     type: Text
+description:
+    css: "div#dynamicDescription p"
+    xpath: null
+    multiple: true
+    type: Text
+bullet_points:
+    css: "div#dynamicDescription ul li"
+    xpath: null
+    multiple: true
+    type: Text
+specifications:
+    css: "div#dynamicDescription table tbody tr"
+    xpath: null
+    multiple: true
+    type: Text
+    children:
+        name:
+            css: "td:nth-child(1)"
+            xpath: null
+            type: Text
+        value:
+            css: "td:nth-child(2)"
+            xpath: null
+            type: Text

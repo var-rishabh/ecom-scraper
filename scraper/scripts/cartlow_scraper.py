@@ -1,7 +1,7 @@
 import json
 import random
 import requests
-from selectorlib import Extractor, Formatter
+from selectorlib import Extractor
 
 from config.logger import logger
 from utils.file_utils import delete_file, save_data_to_html_file
@@ -13,22 +13,12 @@ headers = json.loads(open("config/headers.json", "r").read())
 MAX_TRIES = 10
 
 
-class PriceFormatter(Formatter):
-    def format(self, text):
-        return f"AED {text}"
-
-
-formatters = Formatter.get_all()
-
-
 # scraping product details from cartlow
 def scrape_cartlow(product_name, cartlow_products_urls):
     if not cartlow_products_urls:
         return
 
-    product_selector = Extractor.from_yaml_file(
-        "scraper/selectors/cartlow_product.yml", formatters=formatters
-    )
+    product_selector = Extractor.from_yaml_file("scraper/selectors/cartlow_product.yml")
 
     products_data = []
     success_url_num = 0
@@ -43,12 +33,17 @@ def scrape_cartlow(product_name, cartlow_products_urls):
                 header = random.choice(headers.get("cartlow", []))
 
                 response = requests.get(
-                    url, headers=header, proxies={"http": proxy}, timeout=20
+                    url, headers=header, proxies={"http": proxy}, timeout=10
                 )
                 if response.status_code == 200:
                     product_data = product_selector.extract(response.text)
                     if product_data and product_data["name"]:
                         product_data["url"] = url
+                        product_data["discount_price"] = f"AED {product_data['discount_price']}"
+                        product_data["list_price"] = f"AED {product_data['list_price']}"
+                        if product_data["description"]:
+                            new_description = product_data["description"]
+                            product_data["description"] = " ".join(new_description)
                         delete_file(
                             product_name, "cartlow", f"cartlow{success_url_num}.html"
                         )
@@ -62,13 +57,14 @@ def scrape_cartlow(product_name, cartlow_products_urls):
                         break
                 else:
                     logger.warning(
-                        f"🟣 Failed to fetch {product_name} from cartlow, {response.url}"
+                        f"🟣 Failed to fetch {product_name} from cartlow, {response.url}, {failed_tries}"
                     )
+                    failed_tries += 1
             except Exception as e:
                 logger.error(
-                    f"🟣 Error fetching data from {product_name}", exc_info=True
+                    f"🟣 Error fetching data from {product_name}, {failed_tries}", exc_info=True
                 )
+                failed_tries += 1
 
-            failed_tries += 1
 
     return products_data

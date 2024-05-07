@@ -9,11 +9,13 @@ from config.logger import logger
 from utils.url_utils import (
     raw_search_url,
     amazon_search_url,
+    amazon_asin_url,
     cartlow_search_url,
     noon_search_url,
 )
 
 from scraper.scripts.scrape_functions import scrape_product
+from scraper.scripts.amazon_scraper import scrape_amazon_asin
 
 
 # to scrape data for all products
@@ -73,3 +75,44 @@ def scrape_all(products):
     except Exception as e:
         logger.error(f"Error scraping data.", exc_info=True)
         return []
+
+
+# to scrape amazon data with asin number
+def scrape_amazon_with_asin(asin_numbers):
+    try:
+        start = time.perf_counter()
+        urls = []
+        threads = []
+        for asin_number in asin_numbers:
+            thread = threading.Thread(
+                target=amazon_asin_url,
+                args=(asin_number, urls),
+            )
+            threads.append(thread)
+            thread.start()
+
+        for thread in threads:
+            thread.join()
+
+        print(len(urls))
+
+        threads = []
+        for url in urls:
+            thread = threading.Thread(
+                target=scrape_amazon_asin,
+                args=({url}),
+            )
+
+            threads.append(thread)
+            thread.start()
+
+        for thread in threads:
+            thread.join()
+
+        stop = time.perf_counter()
+
+        print(f"Finished scraping data in {round(stop - start, 2)} seconds.")
+        logger.info(f"Finished scraping data in {round(stop - start, 2)} seconds.")
+
+    except Exception as e:
+        logger.error(f"Error scraping data.", exc_info=True)

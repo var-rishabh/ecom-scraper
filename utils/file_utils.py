@@ -41,6 +41,21 @@ def get_file_data(file_data, file_name):
     return products
 
 
+# to extract amazon asin number from the csv or xlsx file
+def get_amazon_asin_file_data(file_data, file_name):
+    data = None
+    if file_name.endswith(".csv"):
+        data = read_csv(file_data)
+    elif file_name.endswith((".xlsx", ".xls")):
+        data = pd.read_excel(file_data)
+
+    asin_numbers = []
+    for index, row in data.iterrows():
+        asin_numbers.append(row["asin_number"])
+
+    return asin_numbers
+
+
 # saving the scraped html page to a file
 def save_data_to_html_file(product_name, site_name, file_name, data):
     folder = f"data/HTML/{product_name}"

@@ -14,12 +14,13 @@ services:
       - mongodb
     volumes:
       - .:/app
-      - data:/app/data
+      - ./data:/app/data
     restart: always
 
   mongodb:
     image: mongo:latest
     container_name: db-container
+    command: --auth
     ports:
       - "27017:27017"
     volumes:

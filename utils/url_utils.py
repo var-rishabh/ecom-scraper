@@ -87,6 +87,46 @@ def amazon_search_url(amazon_url):
             )
 
 
+# find amazon product url with asin number
+def amazon_asin_url(asin_number, urls):
+    failed_tries = 0
+
+    while failed_tries < MAX_TRIES:
+        try:
+            proxy = f"http://{random.choice(proxies_list)}"
+            header = random.choice(headers.get("amazon", []))
+            url_extractor = Extractor.from_yaml_file(
+                "scraper/selectors/amazon/amazon_url.yml",
+                formatters=formatters,
+            )
+
+            response = requests.get(
+                f"https://www.amazon.ae/s?k={asin_number}",
+                headers=header,
+                proxies={"http": proxy},
+                timeout=20,
+            )
+            if response.status_code == 200:
+                data = url_extractor.extract(response.text)
+                if data["products"]:
+                    for product in data["products"]:
+                        if asin_number == product["url"].split("/dp/")[1].split("/")[0]:
+                            urls.append(product["url"])
+                return
+            else:
+                failed_tries += 1
+                logger.warning(
+                    f"Failed to fetch {asin_number} {failed_tries} - (amazon_asin_url). Trying again"
+                )
+
+        except Exception as e:
+            failed_tries += 1
+            logger.error(
+                f"Error fetching data from {asin_number} {failed_tries} - (amazon_asin_url)",
+                exc_info=True,
+            )
+
+
 # finding cartlow product search urls with product name
 def cartlow_search_url(product_name):
     urls = []

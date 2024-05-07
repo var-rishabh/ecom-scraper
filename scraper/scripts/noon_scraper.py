@@ -63,7 +63,7 @@ def scrape_noon(product_name, noon_products_urls):
                 header = random.choice(headers.get("noon", []))
 
                 response = requests.get(
-                    url, headers=header, proxies={"http": proxy}, timeout=20
+                    url, headers=header, proxies={"http": proxy}, timeout=10
                 )
                 if response.status_code == 200:
                     product_data = product_selector.extract(response.text)
@@ -73,6 +73,16 @@ def scrape_noon(product_name, noon_products_urls):
                                 "renewed_grade"
                             ]
                         product_data["url"] = url
+                        other_data = json.loads(product_data["all_data"])
+                        if other_data["props"]["pageProps"]["catalog"]["product"]["long_description"]:
+                            product_data["description"] = other_data["props"]["pageProps"]["catalog"]["product"]["long_description"]
+                        if other_data["props"]["pageProps"]["catalog"]["product"]["feature_bullets"]:
+                            product_data["bullet_points"] = other_data["props"]["pageProps"]["catalog"]["product"]["feature_bullets"]
+                        product_data["images"] = []
+                        if other_data["props"]["pageProps"]["catalog"]["product"]["image_keys"]:
+                            for image in other_data["props"]["pageProps"]["catalog"]["product"]["image_keys"]:
+                                product_data["images"].append(f"https://f.nooncdn.com/p/{image}.jpg")
+                        del product_data["all_data"]
                         delete_file(product_name, "noon", f"noon{success_url_num}.html")
                         save_data_to_html_file(
                             product_name,
@@ -84,12 +94,13 @@ def scrape_noon(product_name, noon_products_urls):
                         break
                 else:
                     logger.warning(
-                        f"🟡 Failed to fetch {product_name} from noon, {response.url}"
+                        f"🟡 Failed to fetch {product_name} from noon, {response.url}, {failed_tries}"
                     )
+                    failed_tries += 1
             except Exception as e:
                 logger.error(
-                    f"🟡 Error fetching data from {product_name} {url}", exc_info=True
+                    f"🟡 Error fetching data from {product_name} {url}, {failed_tries}", exc_info=True
                 )
+                failed_tries += 1
 
-            failed_tries += 1
     return products_data

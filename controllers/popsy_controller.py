@@ -1,4 +1,5 @@
 import json
+import time
 from fastapi import BackgroundTasks
 
 from config.db import connect_to_mongo
@@ -14,12 +15,15 @@ from scraper.scripts.popsy_scraper import (
 
 # to scrape all products details from the database
 def scrape_all_products(background_tasks: BackgroundTasks):
+    
     db = connect_to_mongo()
     collection = db["popsy"]
 
     def scrape_variants(titles):
-        for title in titles[:5]:
-            print("⚪ Scraping Popsy: ", title)
+        start = time.perf_counter()
+
+        for title in titles:
+            logger.info(f"Scraping Variants for: {title}")
             products = get_popsy_products(title)
             if not products:
                 continue
@@ -44,6 +48,10 @@ def scrape_all_products(background_tasks: BackgroundTasks):
                     else:
                         collection.insert_one(popsy_variant)
                         logger.info(f"Variant Added: {title} - {variant['id']}")
+        end = time.perf_counter()
+        
+        print(f"⏱️ Popsy data scraping took {end - start:0.2f} seconds")
+        logger.info(f"Popsy data scraping took {end - start:0.2f} seconds")
 
     all_titles = get_popsy_products_titles()
     background_tasks.add_task(scrape_variants, all_titles)

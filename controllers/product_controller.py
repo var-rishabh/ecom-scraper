@@ -9,24 +9,11 @@ from config.logger import logger
 
 from models.response import ResponseModel, ErrorResponseModel
 from scraper.scrape import scrape_all
+
+from utils.other_utils import convert_to_int_or_keep_as_string
 from utils.file_utils import get_file_data
 from utils.product_utils import transform_products
 from utils.name_utils import transform_category_csv
-
-
-# to get all products details from the database
-def get_all_products():
-    db = connect_to_mongo()
-
-    try:
-        products = db["products"].find({}, {"_id": 0}).sort("product_id", 1)
-        products = list(products)
-    except Exception as e:
-        logger.error("Error occurred", exc_info=True)
-        return ErrorResponseModel(500, "An error occurred.", "Internal server error.")
-
-    logger.info("Products data found successfully.")
-    return ResponseModel("Products data found successfully.", products)
 
 
 # to download all products details from the database in csv
@@ -240,8 +227,9 @@ async def upload_products(file, background_tasks: BackgroundTasks):
 
 
 # to scrape product details live from the web and update the database
-def get_live_product(product_id: int):
+def get_live_product(product_id):
     try:
+        product_id = convert_to_int_or_keep_as_string(product_id)
         db = connect_to_mongo()
         product_data = db["products"].find_one({"product_id": product_id}, {"_id": 0})
         products = transform_products([product_data])
@@ -255,13 +243,69 @@ def get_live_product(product_id: int):
         return ErrorResponseModel(500, "An error occurred.", "Internal server error.")
 
 
-# to get product details by product_id from database
-def get_product(product_id: int):
+# to get bullet points, description and specifications of a product
+def get_product_description(product_id):
     try:
+        product_id = convert_to_int_or_keep_as_string(product_id)
         db = connect_to_mongo()
         product_data = db["products"].find_one({"product_id": product_id}, {"_id": 0})
         if not product_data:
-            return ErrorResponseModel(404, "An error occurred.", "Product not found.")
+            logger.error("Product not found.")
+            return ErrorResponseModel(404, "Product not found.", [])
+
+        product_info = {}
+        product_info["product_id"] = product_data["product_id"]
+        product_info["brand"] = product_data["brand"]
+        product_info["name"] = product_data["name"]
+        product_info["category"] = product_data["category"]
+        # bullet points
+        if (
+            product_data["amazon"] != None
+            and "bullet_points" in product_data["amazon"][0]
+        ):
+            product_info["bullet_points"] = product_data["amazon"][0]["bullet_points"]
+        elif (
+            product_data["noon"] != None and "bullet_points" in product_data["noon"][0]
+        ):
+            product_info["bullet_points"] = product_data["noon"][0]["bullet_points"]
+        elif (
+            product_data["cartlow"] != None
+            and "bullet_points" in product_data["cartlow"][0]
+        ):
+            product_info["bullet_points"] = product_data["cartlow"][0]["bullet_points"]
+        # description
+        if product_data["noon"] != None and "description" in product_data["noon"][0]:
+            product_info["description"] = product_data["noon"][0]["description"]
+        elif (
+            product_data["cartlow"] != None
+            and "description" in product_data["cartlow"][0]
+        ):
+            product_info["description"] = product_data["cartlow"][0]["description"]
+        # specifications
+        if product_data["noon"] != None and "specifications" in product_data["noon"][0]:
+            product_info["specifications"] = product_data["noon"][0]["specifications"]
+        elif (
+            product_data["cartlow"] != None
+            and "specifications" in product_data["cartlow"][0]
+        ):
+            product_info["specifications"] = product_data["cartlow"][0][
+                "specifications"
+            ]
+
+        return ResponseModel("Product data found successfully.", product_info)
+    except Exception as e:
+        logger.error("Error occurred", exc_info=True)
+        return ErrorResponseModel(500, "An error occurred.", "Internal server error.")
+
+
+# to get product details by product_id from database
+def get_product(product_id):
+    try:
+        product_id = convert_to_int_or_keep_as_string(product_id)
+        db = connect_to_mongo()
+        product_data = db["products"].find_one({"product_id": product_id}, {"_id": 0})
+        if not product_data:
+            return ErrorResponseModel(404, "Product not found.", [])
 
         filename = f'{product_data["product_id"]}.csv'
         header = [

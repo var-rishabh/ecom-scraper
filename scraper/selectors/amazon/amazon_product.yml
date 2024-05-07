@@ -34,3 +34,27 @@ grade:
     css: 'div[data-feature-name="renewedSingleOfferCaption"] .a-text-normal'
     xpath: null
     type: Text
+bullet_points:
+    css: 'ul.a-vertical.a-spacing-mini li.a-spacing-mini'
+    xpath: null
+    type: Text
+    multiple: true
+    children:
+        point:
+            css: 'span.a-list-item'
+            xpath: null
+            type: Text
+specifications:
+    css: 'table.a-normal.a-spacing-micro tr'
+    xpath: null
+    type: Text
+    multiple: true
+    children:
+        name:
+            css: 'td span.a-size-base.a-text-bold'
+            xpath: null
+            type: Text
+        value:
+            css: 'td span.a-size-base.po-break-word'
+            xpath: null
+            type: Text

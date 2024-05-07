@@ -1,20 +1,14 @@
 from fastapi import APIRouter, BackgroundTasks, File, UploadFile
 from controllers.product_controller import (
-    get_all_products,
     download_products,
     scrape_products,
     upload_products,
     get_live_product,
+    get_product_description,
     get_product,
 )
 
 product_router = APIRouter()
-
-
-# to get all products details from the database
-@product_router.get("/get-all")
-async def get_all_products_route():
-    return get_all_products()
 
 
 # to download all products details from the database in csv
@@ -37,11 +31,17 @@ async def upload_products_route(file: UploadFile, BackgroundTasks: BackgroundTas
 
 # to scrape product details live from the web and update the database
 @product_router.get("/live/{product_id}")
-async def get_live_product_route(product_id: int):
+async def get_live_product_route(product_id):
     return get_live_product(product_id)
+
+
+# to get bullet points, description and specifications of a product
+@product_router.get("/get-description/{product_id}")
+def get_product_description_route(product_id):
+    return get_product_description(product_id)
 
 
 # to get product details by product_id from database
 @product_router.get("/{product_id}")
-async def get_product_route(product_id: int):
+async def get_product_route(product_id):
     return get_product(product_id)

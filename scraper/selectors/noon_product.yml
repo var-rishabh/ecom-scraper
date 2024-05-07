@@ -26,10 +26,6 @@ seller:
     css: '.allOffers'
     xpath: null
     type: Text
-images:
-    css: 'meta[property="og:image"]'
-    type: Attribute
-    attribute: content
 grade:
     css: '.sc-4184fc33-3.jTJaSP.active'
     xpath: null
@@ -38,5 +34,23 @@ grade:
     children:
         renewed_grade:
             css: '.sc-4184fc33-3.jTJaSP.active'
+            xpath: null
+            type: Text
+all_data:
+    css: 'script[id="__NEXT_DATA__"]'
+    xpath: null
+    type: Text
+specifications:
+    css: '.sc-966c8510-2.dROUvm table tbody tr'
+    xpath: null
+    type: Text
+    multiple: true
+    children:
+        key:
+            css: 'td:nth-child(1)'
+            xpath: null
+            type: Text
+        value:
+            css: 'td:nth-child(2)'
             xpath: null
             type: Text

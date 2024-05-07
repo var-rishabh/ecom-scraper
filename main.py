@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 
+from apis.amazon_api import amazon_router
 from apis.products_api import product_router
 from apis.popsy_api import popsy_router
 from apis.revent_api import revent_router
@@ -10,6 +11,7 @@ app = FastAPI()
 
 
 # routes
+app.include_router(amazon_router, tags=["amazon"], prefix="/amazon")
 app.include_router(product_router, tags=["product"], prefix="/product")
 app.include_router(popsy_router, tags=["popsy"], prefix="/popsy")
 app.include_router(revent_router, tags=["revent"], prefix="/revent")
