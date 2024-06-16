@@ -2,6 +2,7 @@
 *.xls
 *.csv
 *.txt
+*.zip
 
 .vscode
 test
