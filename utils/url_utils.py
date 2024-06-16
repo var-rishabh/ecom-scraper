@@ -108,15 +108,20 @@ def amazon_asin_url(asin_number, urls):
             )
             if response.status_code == 200:
                 data = url_extractor.extract(response.text)
-                if data["products"]:
+                if data["products"] and "/sspa/click?" not in data["products"][0]["url"]:
                     for product in data["products"]:
                         if asin_number == product["url"].split("/dp/")[1].split("/")[0]:
                             urls.append(product["url"])
-                return
+                    break
+                else:
+                    failed_tries += 1
+                    logger.warning(
+                        f"Failed to fetch {asin_number} {failed_tries} - (amazon_asin_url 2). Trying again"
+                    )
             else:
                 failed_tries += 1
                 logger.warning(
-                    f"Failed to fetch {asin_number} {failed_tries} - (amazon_asin_url). Trying again"
+                    f"Failed to fetch {asin_number} {failed_tries} - (amazon_asin_url 1). Trying again"
                 )
 
         except Exception as e:

@@ -1,5 +1,7 @@
 import os
+import csv
 import pandas as pd
+from io import StringIO
 
 from utils.name_utils import transform_name, transform_category
 
@@ -44,14 +46,19 @@ def get_file_data(file_data, file_name):
 # to extract amazon asin number from the csv or xlsx file
 def get_amazon_asin_file_data(file_data, file_name):
     data = None
+    asin_numbers = []
+    
     if file_name.endswith(".csv"):
-        data = read_csv(file_data)
+        decoded_content = file_data.decode("utf-8")
+        data = csv.reader(StringIO(decoded_content))
+        header = next(data)
+        for row in data:
+            row = ", ".join(row)
+            asin_numbers.append(row)
     elif file_name.endswith((".xlsx", ".xls")):
         data = pd.read_excel(file_data)
-
-    asin_numbers = []
-    for index, row in data.iterrows():
-        asin_numbers.append(row["asin_number"])
+        for index, row in data.iterrows():
+            asin_numbers.append(row["asin_number"])
 
     return asin_numbers
 

@@ -13,7 +13,7 @@ from scraper.scrape import scrape_all
 from utils.other_utils import convert_to_int_or_keep_as_string
 from utils.file_utils import get_file_data
 from utils.product_utils import transform_products
-from utils.name_utils import transform_category_csv
+from utils.name_utils import transform_category_csv, clean_html_string
 
 
 # to download all products details from the database in csv
@@ -29,6 +29,9 @@ def download_products():
             "brand",
             "name",
             "category",
+            "description",
+            "bullet_points",
+            "specifications",
             "amazon_asin_number",
             "amazon_price",
             "cartlow_price",
@@ -137,6 +140,31 @@ def download_products():
                 )
                 data["noon_url"] = noon_data["url"] if "url" in noon_data else "NA"
                 break
+
+            # bullet points
+            if (product["amazon"] != None and "bullet_points" in product["amazon"][0]):
+                data["bullet_points"] = product["amazon"][0]["bullet_points"]
+            elif (product["noon"] != None and "bullet_points" in product["noon"][0]):
+                data["bullet_points"] = product["noon"][0]["bullet_points"]
+            elif (product["cartlow"] != None and "bullet_points" in product["cartlow"][0]):
+                data["bullet_points"] = product["cartlow"][0]["bullet_points"]
+            else:
+                data["bullet_points"] = ""
+            # description
+            if product["noon"] != None and "description" in product["noon"][0]:
+                data["description"] = product["noon"][0]["description"]
+            elif (product["cartlow"] != None and "description" in product["cartlow"][0]):
+                data["description"] = product["cartlow"][0]["description"]
+            else:
+                data["description"] = ""
+            # specifications
+            if product["noon"] != None and "specifications" in product["noon"][0]:
+                data["specifications"] = product["noon"][0]["specifications"]
+            elif (product["cartlow"] != None and "specifications" in product["cartlow"][0]):
+                data["specifications"] = product["cartlow"][0]["specifications"]
+            else:
+                data["specifications"] = ""
+
             all_products.append(data)
 
         csv_data = StringIO()
@@ -149,6 +177,9 @@ def download_products():
                     product["brand"],
                     product["name"],
                     product["category"],
+                    product["description"],
+                    product["bullet_points"],
+                    product["specifications"],
                     product["amazon_asin_number"],
                     product["amazon_price"],
                     product["cartlow_price"],
@@ -181,7 +212,7 @@ def download_products():
         )
 
     except Exception as e:
-        logger.error("Error occurred", exc_info=True)
+        logger.error(f"Error occurred {e}", exc_info=True)
         return ErrorResponseModel(500, "An error occurred.", "Internal server error.")
 
 
@@ -258,34 +289,34 @@ def get_product_description(product_id):
         product_info["brand"] = product_data["brand"]
         product_info["name"] = product_data["name"]
         product_info["category"] = product_data["category"]
-        # bullet points
+        # bullet points or highlights
         if (
-            product_data["amazon"] != None
-            and "bullet_points" in product_data["amazon"][0]
-        ):
-            product_info["bullet_points"] = product_data["amazon"][0]["bullet_points"]
-        elif (
-            product_data["noon"] != None and "bullet_points" in product_data["noon"][0]
+            product_data["noon"] != None and product_data["noon"] != [] and "bullet_points" in product_data["noon"][0]
         ):
             product_info["bullet_points"] = product_data["noon"][0]["bullet_points"]
         elif (
-            product_data["cartlow"] != None
+            product_data["cartlow"] != None and product_data["cartlow"] != []
             and "bullet_points" in product_data["cartlow"][0]
         ):
             product_info["bullet_points"] = product_data["cartlow"][0]["bullet_points"]
-        # description
-        if product_data["noon"] != None and "description" in product_data["noon"][0]:
-            product_info["description"] = product_data["noon"][0]["description"]
         elif (
-            product_data["cartlow"] != None
+            product_data["amazon"] != None and product_data["amazon"] != []
+            and "bullet_points" in product_data["amazon"][0]
+        ):
+            product_info["bullet_points"] = product_data["amazon"][0]["bullet_points"]
+        # description
+        if product_data["noon"] != None and product_data["noon"] != [] and "description" in product_data["noon"][0]:
+            product_info["description"] = clean_html_string(product_data["noon"][0]["description"])
+        elif (
+            product_data["cartlow"] != None and product_data["cartlow"] != []
             and "description" in product_data["cartlow"][0]
         ):
-            product_info["description"] = product_data["cartlow"][0]["description"]
+            product_info["description"] = clean_html_string(product_data["cartlow"][0]["description"])
         # specifications
-        if product_data["noon"] != None and "specifications" in product_data["noon"][0]:
+        if product_data["noon"] != None and product_data["noon"] != [] and "specifications" in product_data["noon"][0]:
             product_info["specifications"] = product_data["noon"][0]["specifications"]
         elif (
-            product_data["cartlow"] != None
+            product_data["cartlow"] != None and product_data["cartlow"] != []
             and "specifications" in product_data["cartlow"][0]
         ):
             product_info["specifications"] = product_data["cartlow"][0][

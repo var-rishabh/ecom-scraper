@@ -58,3 +58,7 @@ specifications:
             css: 'td span.a-size-base.po-break-word'
             xpath: null
             type: Text
+multiple_vendors:
+    css: '#dynamic-aod-ingress-box > div > div.a-section.a-spacing-base > span'
+    xpath: null
+    type: Text

@@ -1,5 +1,6 @@
 import re
 
+
 # to transform product name with amazon search format
 def transform_name(name):
     # Remove special characters and replace them with spaces
@@ -36,3 +37,12 @@ def transform_category(category):
 # to format category name for csv file
 def transform_category_csv(category):
     return "/".join(category)
+
+
+# to remove HTML tags, escape characters and multiple spaces from the string
+def clean_html_string(text):
+    clean_text = re.sub(r"<[^>]+>", "", text)
+    clean_text = re.sub(r"\\[nt]", " ", clean_text)
+    clean_text = clean_text.replace('&nbsp;', '')
+    clean_text = re.sub(r"\s+", " ", clean_text).strip()
+    return clean_text

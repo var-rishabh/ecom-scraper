@@ -1,0 +1,18 @@
+name:
+    css: '#productTitle'
+    xpath: null
+    type: Text
+hardcover_price:
+    css: 'span.slot-price > span.a-size-base.a-color-price.a-color-price'
+    xpath: null
+    type: Text
+    format: BookPriceFormatter
+paperback_price:
+    css: 'span.slot-price > span.a-size-base.a-color-secondary'
+    xpath: null
+    type: Text
+    format: PriceFormatter
+images:
+    css: '.imgTagWrapper img'
+    type: Attribute
+    attribute: src

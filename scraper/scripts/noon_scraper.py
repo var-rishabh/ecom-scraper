@@ -5,6 +5,7 @@ from selectorlib import Extractor, Formatter
 
 from config.logger import logger
 from utils.file_utils import delete_file, save_data_to_html_file
+from utils.name_utils import clean_html_string
 
 # getting all proxies list
 proxies_list = open("config/proxies_list.txt", "r").read().strip().split("\n")
@@ -75,7 +76,7 @@ def scrape_noon(product_name, noon_products_urls):
                         product_data["url"] = url
                         other_data = json.loads(product_data["all_data"])
                         if other_data["props"]["pageProps"]["catalog"]["product"]["long_description"]:
-                            product_data["description"] = other_data["props"]["pageProps"]["catalog"]["product"]["long_description"]
+                            product_data["description"] = clean_html_string(other_data["props"]["pageProps"]["catalog"]["product"]["long_description"])
                         if other_data["props"]["pageProps"]["catalog"]["product"]["feature_bullets"]:
                             product_data["bullet_points"] = other_data["props"]["pageProps"]["catalog"]["product"]["feature_bullets"]
                         product_data["images"] = []
