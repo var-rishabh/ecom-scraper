@@ -108,10 +108,14 @@ def amazon_asin_url(asin_number, urls):
             )
             if response.status_code == 200:
                 data = url_extractor.extract(response.text)
-                if data["products"] and "/sspa/click?" not in data["products"][0]["url"]:
+                if (
+                    data["products"]
+                    and "/sspa/click?" not in data["products"][0]["url"]
+                ):
                     for product in data["products"]:
                         if asin_number == product["url"].split("/dp/")[1].split("/")[0]:
                             urls.append(product["url"])
+                    logger.info(f"Fetched {asin_number} - (amazon_asin_url)")
                     break
                 else:
                     failed_tries += 1
@@ -130,6 +134,58 @@ def amazon_asin_url(asin_number, urls):
                 f"Error fetching data from {asin_number} {failed_tries} - (amazon_asin_url)",
                 exc_info=True,
             )
+
+
+# find amazon book url with asin number
+def amazon_book_asin_url(asin_number):
+    failed_tries = 0
+    url = None
+
+    while failed_tries < MAX_TRIES:
+        try:
+            proxy = f"http://{random.choice(proxies_list)}"
+            header = random.choice(headers.get("amazon", []))
+            url_extractor = Extractor.from_yaml_file(
+                "scraper/selectors/amazon/amazon_url.yml",
+                formatters=formatters,
+            )
+
+            response = requests.get(
+                f"https://www.amazon.ae/s?k={asin_number}",
+                headers=header,
+                proxies={"http": proxy},
+                timeout=20,
+            )
+            if response.status_code == 200:
+                data = url_extractor.extract(response.text)
+                if (
+                    data["products"]
+                    and "/sspa/click?" not in data["products"][0]["url"]
+                ):
+                    for product in data["products"]:
+                        if asin_number == product["url"].split("/dp/")[1].split("/")[0]:
+                            url = product["url"]
+                    logger.info(f"Fetched {asin_number} - (amazon_asin_url)")
+                    break
+                else:
+                    failed_tries += 1
+                    logger.warning(
+                        f"Failed to fetch {asin_number} {failed_tries} - (amazon_asin_url 2). Trying again"
+                    )
+            else:
+                failed_tries += 1
+                logger.warning(
+                    f"Failed to fetch {asin_number} {failed_tries} - (amazon_asin_url 1). Trying again"
+                )
+
+        except Exception as e:
+            failed_tries += 1
+            logger.error(
+                f"Error fetching data from {asin_number} {failed_tries} - (amazon_asin_url)",
+                exc_info=True,
+            )
+
+    return url
 
 
 # finding cartlow product search urls with product name

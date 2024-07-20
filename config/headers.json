@@ -74,5 +74,11 @@
             "origin": "https://www.northladder.com",
             "x-api-key": "7134355B99D1348212E844EBF:DA9571E7ACAF6B6795C50B8C7DED0E2631A6E38ADA925C89099175477196"
         }
-    ]
+    ],
+    "samsung_north": [
+        {
+            "origin": "https://www.samsungtradein.ae",
+            "x-api-key": "ISE1H6TQ0MVJGZT93IG6:C93370402F1SF7888467878HH76E3F1104A7DCF3BEE2F1580D83EF014232EA05EBB"
+        }
+    ] 
 }

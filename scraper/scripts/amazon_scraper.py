@@ -51,14 +51,17 @@ formatters = Formatter.get_all()
 # to get books data from google api
 def google_books_api(isbn_number):
     failed_tries = 0
-    book_data = {}
+    book_data = {
+        "isbn_number": isbn_number,
+        "asin_number": isbn_number,
+    }
     while failed_tries < MAX_TRIES:
         try:
             proxy = f"http://{random.choice(proxies_list)}"
             response = requests.get(
-                f"https://www.googleapis.com/books/v1/volumes?q=isbn:{isbn_number}",
+                f"https://www.googleapis.com/books/v1/volumes?q=isbn:{isbn_number}&key=AIzaSyAXuAECCotD7cpMW9v8tVcywyGOAIpFMgw",
                 proxies={"http": proxy},
-                timeout=20,
+                timeout=10,
             )
             if response.status_code == 200:
                 data = response.json()
@@ -94,29 +97,30 @@ def google_books_api(isbn_number):
                     book_data["maturityRating"] = data["items"][0]["volumeInfo"].get(
                         "maturityRating", ""
                     )
-                    book_data["isbn_10"] = (
-                        data["items"][0]["volumeInfo"]
-                        .get("industryIdentifiers", [])[0]
-                        .get("identifier", "")
-                    )
-                    return book_data
+                    logger.info(f"Book found {isbn_number} from Google Books API.")
                 else:
                     logger.warning(
-                        f"No book found {isbn_number} from Google Books API."
+                        f"No book found {isbn_number} from Google Books API. {failed_tries} (google_books_api)"
                     )
-                    return book_data
+                break
+            elif response.status_code == 429:
+                logger.error(
+                    f"Google Books API rate limit exceeded. {failed_tries} (google_books_api)"
+                )
+                break
             else:
                 failed_tries += 1
                 logger.warning(
-                    f"Failed to fetch {isbn_number} from Google Books API. Trying again"
+                    f"Failed to fetch {isbn_number} from Google Books API. {failed_tries} (google_books_api) Trying again"
                 )
 
         except Exception as e:
             failed_tries += 1
             logger.error(
-                f"Error fetching data for {isbn_number} from Google Books API.",
+                f"Error fetching data for {isbn_number} from Google Books API. {failed_tries} (google_books_api)",
                 exc_info=True,
             )
+
     return book_data
 
 
@@ -315,8 +319,28 @@ def scrape_amazon_asin(url):
 
 
 # to scrape amazon books details
-def scrape_amazon_books_asin(url):
+def scrape_amazon_books_asin(url, asin_number):
     failed_tries = 0
+    book_data = google_books_api(asin_number)
+    
+    # saving data in mongodb
+    if not url:
+        db = connect_to_mongo()
+        if db["books"].find_one({"asin_number": asin_number}):
+            db["books"].update_one(
+                {"asin_number": asin_number},
+                {"$set": book_data},
+            )
+            logger.info(
+                f"Updated books data in Amazon, {book_data['asin_number']}"
+            )
+        else:
+            db["books"].insert_one(book_data)
+            logger.info(
+                f"Inserted books data in Amazon, {book_data['asin_number']}"
+            )
+        return
+
     while failed_tries < MAX_TRIES:
         try:
             proxy = f"http://{random.choice(proxies_list)}"
@@ -325,8 +349,6 @@ def scrape_amazon_books_asin(url):
                 "scraper/selectors/amazon/amazon_books.yml", formatters=formatters
             )
 
-            book_data = google_books_api(url.split("/dp/")[1].split("/")[0])
-
             response = requests.get(
                 url, headers=header, proxies={"http": proxy}, timeout=20
             )
@@ -334,13 +356,14 @@ def scrape_amazon_books_asin(url):
                 product_data = product_selector.extract(response.text)
                 if product_data and product_data["name"]:
                     book_data["url"] = url
-                    book_data["asin_number"] = url.split("/dp/")[1].split("/")[0]
                     book_data["hardcover_price"] = product_data["hardcover_price"]
                     book_data["paperback_price"] = product_data["paperback_price"]
                     book_data["images"] = product_data["images"]
                     if not "title" in book_data:
                         book_data["title"] = product_data["name"]
                     product_data["updated_on"] = datetime.now()
+
+                    logger.info(f"Book found {url} from Amazon.")
                     # saving data in mongodb
                     db = connect_to_mongo()
                     if db["books"].find_one({"asin_number": book_data["asin_number"]}):
@@ -349,26 +372,26 @@ def scrape_amazon_books_asin(url):
                             {"$set": book_data},
                         )
                         logger.info(
-                            f"Updated data in Amazon, {book_data['asin_number']}"
+                            f"Updated books data in Amazon, {book_data['asin_number']}"
                         )
                     else:
                         db["books"].insert_one(book_data)
                         logger.info(
-                            f"Inserted data in Amazon, {book_data['asin_number']}"
+                            f"Inserted books data in Amazon, {book_data['asin_number']}"
                         )
                     break
                 else:
                     logger.warning(
-                        f"🟠 No data found on Amazon, {response.url}, {failed_tries}"
+                        f"🟠 No data found on Amazon, {response.url}, {failed_tries} (scrape_amazon_books_asin). Trying Again"
                     )
             else:
                 failed_tries += 1
                 logger.warning(
-                    f"🟠 Failed to fetch from Amazon, {response.url}, {failed_tries}"
+                    f"🟠 Failed to fetch from Amazon, {response.url}, {failed_tries} (scrape_amazon_books_asin)"
                 )
         except Exception as e:
             failed_tries += 1
             logger.error(
-                f"🟠 Error fetching book data from {url}, {failed_tries}",
+                f"🟠 Error fetching book data from {url}, {failed_tries} (scrape_amazon_books_asin)",
                 exc_info=True,
             )

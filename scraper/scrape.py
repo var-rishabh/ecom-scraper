@@ -10,12 +10,32 @@ from utils.url_utils import (
     raw_search_url,
     amazon_search_url,
     amazon_asin_url,
+    amazon_book_asin_url,
     cartlow_search_url,
     noon_search_url,
 )
 
 from scraper.scripts.scrape_functions import scrape_product
 from scraper.scripts.amazon_scraper import scrape_amazon_asin, scrape_amazon_books_asin
+
+
+# scrape books controller
+def scrape_books(asin_number):
+    try:
+        start = time.perf_counter()
+
+        # scrape amazon book url
+        book_amazon_url = amazon_book_asin_url(asin_number)
+        scrape_amazon_books_asin(book_amazon_url, asin_number)
+
+        stop = time.perf_counter()
+
+        logger.info(
+            f"Book data found in {round(stop - start, 2)} seconds. (scrape_books)"
+        )
+
+    except Exception as e:
+        logger.error(f"Error scraping data.", exc_info=True)
 
 
 # to scrape data for all products
@@ -122,12 +142,11 @@ def scrape_amazon_with_asin(asin_numbers):
 def scrape_amazon_books(asin_numbers):
     try:
         start = time.perf_counter()
-        urls = []
         threads = []
         for asin_number in asin_numbers:
             thread = threading.Thread(
-                target=amazon_asin_url,
-                args=(asin_number, urls),
+                target=scrape_books,
+                args=({asin_number}),
             )
             threads.append(thread)
             thread.start()
@@ -135,25 +154,25 @@ def scrape_amazon_books(asin_numbers):
         for thread in threads:
             thread.join()
 
-        print(len(urls))
+        # threads = []
+        # for url in urls:
+        #     thread = threading.Thread(
+        #         target=scrape_amazon_books_asin,
+        #         args=({url}),
+        #     )
 
-        threads = []
-        for url in urls:
-            thread = threading.Thread(
-                target=scrape_amazon_books_asin,
-                args=({url}),
-            )
+        #     threads.append(thread)
+        #     thread.start()
 
-            threads.append(thread)
-            thread.start()
-
-        for thread in threads:
-            thread.join()
+        # for thread in threads:
+        #     thread.join()
 
         stop = time.perf_counter()
 
-        print(f"Finished scraping data in {round(stop - start, 2)} seconds.")
-        logger.info(f"Finished scraping data in {round(stop - start, 2)} seconds.")
+        print(f"Finished scraping all books data in {round(stop - start, 2)} seconds.")
+        logger.info(
+            f"Finished scraping all books data in {round(stop - start, 2)} seconds."
+        )
 
     except Exception as e:
         logger.error(f"Error scraping data.", exc_info=True)
