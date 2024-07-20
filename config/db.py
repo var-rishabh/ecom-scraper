@@ -13,7 +13,7 @@ def connect_to_mongo():
         # client = MongoClient(f"mongodb://scraper:scraper@mongodb:27017/")
 
         # r3server mongo
-        client = MongoClient("mongodb://r3f:r3f@217.165.153.248:27017/")
+        # client = MongoClient("mongodb://r3f:r3f@217.165.153.248:27017/")
         db = client["ecomScraper"]
         return db
 
