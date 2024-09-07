@@ -10,7 +10,7 @@ from utils.name_utils import transform_name, transform_category
 def get_file_data(file_data, file_name):
     data = None
     if file_name.endswith(".csv"):
-        data = read_csv(file_data)
+        data = pd.read_csv(StringIO(file_data.decode('utf-8')))
     elif file_name.endswith((".xlsx", ".xls")):
         data = pd.read_excel(file_data)
 
